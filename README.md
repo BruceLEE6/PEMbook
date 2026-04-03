@@ -19,7 +19,8 @@ https://brucelee6.github.io/PEMbook/
 From repository root:
 
 ```bash
-source .venv/bin/activate
+# Prefer .venv312 if available
+source .venv312/bin/activate
 jupyter-book build jupyter-book
 ```
 

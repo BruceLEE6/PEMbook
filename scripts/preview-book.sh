@@ -7,8 +7,10 @@ HTML_DIR="$BOOK_DIR/_build/html"
 
 cd "$ROOT_DIR"
 
-if [[ -f ".venv/bin/activate" ]]; then
-  # Activate local virtual environment when available.
+# Prefer Python 3.12 environment because Jupyter Book dependencies may fail on 3.13.
+if [[ -f ".venv312/bin/activate" ]]; then
+  source .venv312/bin/activate
+elif [[ -f ".venv/bin/activate" ]]; then
   source .venv/bin/activate
 fi
 
