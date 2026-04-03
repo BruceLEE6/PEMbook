@@ -27,6 +27,17 @@ Then open:
 
 - `jupyter-book/_build/html/index.html`
 
+## One-command local preview
+
+From repository root:
+
+```bash
+./scripts/preview-book.sh
+```
+
+Then open `http://127.0.0.1:8000` in your browser.
+Use `Ctrl+C` in the terminal to stop the server.
+
 ## Publish updates
 
 1. Edit your content inside `jupyter-book/`.
