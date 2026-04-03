@@ -1,0 +1,11 @@
+title: "PEM Electrolyzers: From Modeling to Control"
+author: "Zhongliang Li"
+language: en
+execute:
+  execute_notebooks: "off"
+bibtex_bibfiles:
+  - references.bib
+html:
+  use_repository_button: false
+  use_issues_button: false
+  use_edit_page_button: false

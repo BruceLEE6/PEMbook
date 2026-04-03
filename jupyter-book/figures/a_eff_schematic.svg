@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 260" width="520" height="260" font-family="Arial, sans-serif">
+  <style>
+    .label { font-size: 14px; fill: #222; }
+    .title { font-size: 16px; font-weight: bold; fill: #111; }
+  </style>
+  <!-- Geometric area rectangle -->
+  <rect x="40" y="40" width="200" height="160" fill="#eef3ff" stroke="#3b6af5" stroke-width="2" />
+  <text x="140" y="30" class="title" text-anchor="middle">Geometric area A</text>
+
+  <!-- Rough surface path to represent real area -->
+  <path d="M60 70 q20 -25 40 0 q20 25 40 0 q20 -25 40 0 q20 25 40 0" fill="none" stroke="#0c7c59" stroke-width="3" />
+  <path d="M60 110 q18 -18 36 0 q18 18 36 0 q18 -18 36 0 q18 18 36 0" fill="none" stroke="#0c7c59" stroke-width="3" />
+  <path d="M60 150 q16 -20 32 0 q16 20 32 0 q16 -20 32 0 q16 20 32 0" fill="none" stroke="#0c7c59" stroke-width="3" />
+  <path d="M60 190 q14 -16 28 0 q14 16 28 0 q14 -16 28 0 q14 16 28 0" fill="none" stroke="#0c7c59" stroke-width="3" />
+
+  <!-- Active sites dots -->
+  <g fill="#0c7c59">
+    <circle cx="90" cy="70" r="4" />
+    <circle cx="130" cy="70" r="4" />
+    <circle cx="170" cy="70" r="4" />
+    <circle cx="210" cy="70" r="4" />
+    <circle cx="100" cy="110" r="4" />
+    <circle cx="150" cy="110" r="4" />
+    <circle cx="200" cy="110" r="4" />
+    <circle cx="85" cy="150" r="4" />
+    <circle cx="140" cy="150" r="4" />
+    <circle cx="195" cy="150" r="4" />
+    <circle cx="110" cy="190" r="4" />
+    <circle cx="165" cy="190" r="4" />
+  </g>
+
+  <!-- Labels -->
+  <text x="300" y="90" class="label">Real catalytic area</text>
+  <line x1="250" y1="85" x2="210" y2="70" stroke="#111" stroke-width="1.5" marker-end="url(#arrow)" />
+
+  <text x="300" y="130" class="label">Roughness factor</text>
+  <text x="300" y="150" class="label">r = A<sub>real</sub> / A<sub>geom</sub></text>
+  <text x="300" y="175" class="label">a<sub>eff</sub> ≈ r</text>
+
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L6,3 z" fill="#111" />
+    </marker>
+  </defs>
+</svg>

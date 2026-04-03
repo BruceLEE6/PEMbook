@@ -1,0 +1,13 @@
+format: jb-book
+root: intro
+chapters:
+  - file: chapters/01_introduction
+  - file: chapters/02_principles
+  - file: chapters/03_components
+  - file: chapters/04_single_cell_modeling
+  - file: chapters/05_stack_modeling
+  - file: chapters/06_numerical_methods
+  - file: chapters/07_control_requirements
+  - file: chapters/08_model_based_control
+  - file: chapters/09_learning_control
+  - file: chapters/10_future_trends
