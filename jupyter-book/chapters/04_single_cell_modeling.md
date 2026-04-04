@@ -1,7 +1,103 @@
 # Single Cell Modeling
 
 ## Governing Equations (Mass, Charge, Energy)
-*Outline mass, charge, and energy balances for membrane, catalyst layers, and channels.*
+This section organizes the single-cell PEM electrolyzer model as a coupled multiphysics problem over channels, porous transport layers (PTLs), catalyst layers (CLs), and membrane.
+
+### Model domains and state variables
+Typical primary fields are:
+
+- Species concentrations or partial pressures: $c_k$ or $p_k$
+- Potentials: solid phase $\phi_{\mathrm{sol}}$, ionic phase $\phi_{\mathrm{mem}}$
+- Temperature: $T$
+- Membrane hydration variable: $\lambda$ (if hydration dynamics are included)
+
+The model is closed by constitutive laws for reaction kinetics, transport properties, and source terms.
+
+### Species conservation
+For each species $k$ in a control volume:
+
+$$
+\frac{\partial c_k}{\partial t} + \nabla\cdot\mathbf{N}_k = S_k
+$$
+
+with flux (dilute convection-diffusion form):
+
+$$
+\mathbf{N}_k = -D_{k,\mathrm{eff}}\nabla c_k + c_k\mathbf{u}
+$$
+
+and reaction source in CLs:
+
+$$
+S_k = \nu_k\,\frac{i}{nF}
+$$
+
+where $\nu_k$ is stoichiometric coefficient, $i$ is local current density, and $n$ is electron number of the half-reaction.
+
+### Charge conservation
+Charge transport is split between electronic and protonic phases.
+
+Electronic (solid matrix):
+
+$$
+-\nabla\cdot\left(\sigma_{\mathrm{sol}}\nabla\phi_{\mathrm{sol}}\right)=S_{\mathrm{chg}}
+$$
+
+Ionic (membrane/ionomer):
+
+$$
+-\nabla\cdot\left(\kappa_{\mathrm{mem}}\nabla\phi_{\mathrm{mem}}\right)=-S_{\mathrm{chg}}
+$$
+
+In CLs, source coupling is typically:
+
+$$
+S_{\mathrm{chg}} = a_{\mathrm{eff}}\,i_{\mathrm{BV}}
+$$
+
+which enforces current continuity between phases.
+
+### Energy conservation
+A representative energy balance is:
+
+$$
+\rho c_p\frac{\partial T}{\partial t} + \rho c_p\mathbf{u}\cdot\nabla T
+= \nabla\cdot(k_{\mathrm{eff}}\nabla T) + q_{\mathrm{rxn}} + q_{\Omega} + q_{\mathrm{phase}}
+$$
+
+where:
+
+- $q_{\mathrm{rxn}}$ includes irreversible electrochemical heat
+- $q_{\Omega}$ is Joule heating in electronic/ionic paths
+- $q_{\mathrm{phase}}$ captures latent effects (if two-phase model is used)
+
+### Water transport in membrane (optional dynamic hydration)
+When hydration is modeled explicitly, a common form is:
+
+$$
+\mathbf{N}_{\mathrm{H_2O}} = -D_{\lambda}\nabla\lambda + n_{\mathrm{drag}}\frac{i}{F}
+$$
+
+combining back-diffusion and electro-osmotic drag.
+
+### Voltage closure
+Cell voltage is computed from reversible potential and losses:
+
+$$
+U_{\mathrm{cell}} = E_{\mathrm{rev}} + \eta_{\mathrm{act,an}} + \eta_{\mathrm{act,ca}} + \eta_{\Omega} + \eta_{\mathrm{mt}}
+$$
+
+where each overpotential is obtained from local fields and integrated or averaged according to model fidelity.
+
+### Boundary and interface conditions
+A consistent setup typically includes:
+
+- Inlet channels: specified flow/composition/temperature
+- Outlets: specified pressure or convective outflow
+- Current collectors: imposed current density or potential
+- Layer interfaces: continuity of species, heat, and charge fluxes
+
+This structure yields a solvable coupled PDE/DAE system for single-cell simulation, parameter estimation, and control-oriented model reduction.
 
 
 ## Electrochemical Kinetics
@@ -132,7 +228,7 @@ Effective catalytic surface area relative to geometric area (roughness factor \(
 ```
 
 
-### Species Transport (gas/liquid)
+## Species Transport (gas/liquid)
 Fickian form in channels:
 $$
 \frac{\partial c_k}{\partial t} + \nabla \cdot(-D_k\nabla c_k + c_k \mathbf{u}) = S_k,
@@ -186,14 +282,6 @@ where $S_k$ includes electrochemical source terms $S_k = \nu_k\, i/(nF)$ in CLs.
 
 **Coupling to reaction**
 Species source $S_k = \nu_k\, i/(nF)$ enters the conservation equation inside the CL. Mass-transport limitations feed back into kinetics via surface concentrations/activities used in Nernst and exchange current density $i_0$.
-
-### Energy Balance
-Lumped solid/fluid energy balance (example for a 0D cell control volume):
-$$
-\rho c_p \frac{dT}{dt} = \nabla \cdot (k \nabla T) + i\,\eta_{\text{act}} + i\,\eta_{\text{ohm}} - hA(T-T_{\infty}) + q_{\text{phase}},
-$$
-where the source terms gather irreversible heating (activation + ohmic) and phase-change enthalpy if present. In 1D through-plane models, use layer-specific $k$ and include anisotropy in GDL/CL.
-
 ### Gas Transport in Porous Layers
 Often represented with Darcy or Darcy–Forchheimer plus species convection-diffusion; a simple effective-diffusion model in CL/PTL is
 $$
@@ -205,6 +293,12 @@ with porosity $\varepsilon$ and tortuosity $\tau$; for two-phase, add saturation
 - Electro-osmotic drag: $n_{\text{drag}}\,(i/F)$ from anode to cathode.
 - Back-diffusion: driven by $\nabla \lambda$ with $D_{\lambda}(T,\lambda)$.
 - Water uptake isothermal isotherm links $\lambda$ and water activity $a_w$ at interfaces.
+## Energy Balance
+Lumped solid/fluid energy balance (example for a 0D cell control volume):
+$$
+\rho c_p \frac{dT}{dt} = \nabla \cdot (k \nabla T) + i\,\eta_{\text{act}} + i\,\eta_{\text{ohm}} - hA(T-T_{\infty}) + q_{\text{phase}},
+$$
+where the source terms gather irreversible heating (activation + ohmic) and phase-change enthalpy if present. In 1D through-plane models, use layer-specific $k$ and include anisotropy in GDL/CL.
 
 
 ## 0D and 1D Modeling Approaches

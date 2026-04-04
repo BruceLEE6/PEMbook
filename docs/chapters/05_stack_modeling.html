@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/05_stack_modeling';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -326,9 +328,41 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multicell-stack-models-and-assumptions">Multicell Stack Models and Assumptions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#thermal-and-fluidic-modeling">Thermal and Fluidic Modeling</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-behavior-and-transients">Dynamic Behavior and Transients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multicell-stack-models-and-assumptions">Multicell Stack Models and Assumptions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-level-electrical-balance">Stack-level electrical balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-and-mass-balances">Species and mass balances</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-thermal-balance">Stack thermal balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manifolding-assumptions">Manifolding assumptions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-to-cell-variability-modeling">Cell-to-cell variability modeling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#thermal-and-fluidic-modeling">Thermal and Fluidic Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coolant-side-modeling">Coolant-side modeling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-feed-and-recirculation-management">Water feed and recirculation management</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-management-h2-and-o2-paths">Gas management (H2 and O2 paths)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pressure-drop-in-manifolds-and-channels">Pressure drop in manifolds and channels</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coupled-electro-thermal-fluid-feedbacks">Coupled electro-thermal-fluid feedbacks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-modeling-assumptions-for-control-oriented-models">Typical modeling assumptions for control-oriented models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-behavior-and-transients">Dynamic Behavior and Transients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-change-dynamics">Load-change dynamics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-up-sequence-modeling">Start-up sequence modeling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shutdown-and-emergency-transients">Shutdown and emergency transients</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactions-with-external-power-systems">Interactions with external power systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-transient-indicators">Key transient indicators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bop-models">BoP models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-pump-model">Water pump model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pressure-regulation-model">Pressure regulation model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temperature-regulation-model">Temperature regulation model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-liquid-separator-and-recirculation-model">Gas-liquid separator and recirculation model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compressor-and-downstream-pressure-interface-optional">Compressor and downstream pressure interface (optional)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bop-control-loops-and-coupling-with-stack-model">BoP control loops and coupling with stack model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bop-oriented-performance-indicators">BoP-oriented performance indicators</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-stack-simulation-under-load-variation">Case Study: Stack Simulation Under Load Variation</a></li>
 </ul>
             </nav>
@@ -345,15 +379,343 @@ document.write(`
 <h1>System-Level and Stack Modeling<a class="headerlink" href="#system-level-and-stack-modeling" title="Permalink to this heading">#</a></h1>
 <section id="multicell-stack-models-and-assumptions">
 <h2>Multicell Stack Models and Assumptions<a class="headerlink" href="#multicell-stack-models-and-assumptions" title="Permalink to this heading">#</a></h2>
-<p><em>Summarize stack-level balance equations, manifolding assumptions, and cell-to-cell variability.</em></p>
+<p>A stack model aggregates electrochemical, thermal, and hydraulic behavior across <span class="math notranslate nohighlight">\(N_c\)</span> cells while preserving the dominant non-uniformities introduced by manifolds and manufacturing dispersion.</p>
+<section id="stack-level-electrical-balance">
+<h3>Stack-level electrical balance<a class="headerlink" href="#stack-level-electrical-balance" title="Permalink to this heading">#</a></h3>
+<p>For series-connected cells, stack voltage is the sum of cell voltages:</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\text{stack}} = \sum_{i=1}^{N_c} U_i
+\]</div>
+<p>with each cell represented by:</p>
+<div class="math notranslate nohighlight">
+\[
+U_i = E_{\text{rev},i} + \eta_{\text{act},i} + \eta_{\Omega,i} + \eta_{\text{mt},i}
+\]</div>
+<p>All cells share the same stack current <span class="math notranslate nohighlight">\(I\)</span> (series connection), while local current density differs if active area, contact resistance, or local conditions vary:</p>
+<div class="math notranslate nohighlight">
+\[
+j_i = \frac{I}{A_{\text{act},i}}
+\]</div>
+</section>
+<section id="species-and-mass-balances">
+<h3>Species and mass balances<a class="headerlink" href="#species-and-mass-balances" title="Permalink to this heading">#</a></h3>
+<p>At stack scale, hydrogen and oxygen production follow Faraday’s law:</p>
+<div class="math notranslate nohighlight">
+\[
+\dot n_{\mathrm{H_2}} = \eta_F\,\frac{N_c I}{2F},
+\qquad
+\dot n_{\mathrm{O_2}} = \eta_F\,\frac{N_c I}{4F}
+\]</div>
+<p>For manifolded channels, a common reduced form for each cell control volume is:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{d m_i}{dt} = \dot m_{i,\text{in}} - \dot m_{i,\text{out}} + \dot m_{i,\text{gen}} - \dot m_{i,\text{cross}}
+\]</div>
+<p>where generation terms come from electrochemistry and crossover terms capture membrane permeation and leakage effects.</p>
+</section>
+<section id="stack-thermal-balance">
+<h3>Stack thermal balance<a class="headerlink" href="#stack-thermal-balance" title="Permalink to this heading">#</a></h3>
+<p>A lumped stack thermal model is often written as:</p>
+<div class="math notranslate nohighlight">
+\[
+C_{\text{th,stack}}\frac{dT_{\text{stack}}}{dt}
+= \dot Q_{\text{irr}} - \dot Q_{\text{cool}} - \dot Q_{\text{loss}}
+\]</div>
+<p>with irreversible heat approximated by:</p>
+<div class="math notranslate nohighlight">
+\[
+\dot Q_{\text{irr}} \approx N_c I\left(U_{\text{cell,avg}} - E_{\text{th}}\right)
+\]</div>
+<p>In higher-fidelity models, <span class="math notranslate nohighlight">\(T_i\)</span> is tracked per cell or per stack segment to capture thermal gradients along flow direction.</p>
+</section>
+<section id="manifolding-assumptions">
+<h3>Manifolding assumptions<a class="headerlink" href="#manifolding-assumptions" title="Permalink to this heading">#</a></h3>
+<p>To keep computation tractable, stack models typically adopt one of these manifold assumptions:</p>
+<ul class="simple">
+<li><p><strong>Uniform distribution assumption:</strong> equal inlet flow to each cell; suitable for control-oriented models.</p></li>
+<li><p><strong>Hydraulic network assumption:</strong> manifold and channel pressure drops computed explicitly; better for diagnosing maldistribution.</p></li>
+<li><p><strong>Quasi-steady hydraulics:</strong> pressure-flow algebraic equations coupled to slower electro-thermal dynamics.</p></li>
+</ul>
+<p>Pressure-drop relations often use Darcy-Weisbach-type forms in manifolds and effective porous resistance in PTLs/channels.</p>
+</section>
+<section id="cell-to-cell-variability-modeling">
+<h3>Cell-to-cell variability modeling<a class="headerlink" href="#cell-to-cell-variability-modeling" title="Permalink to this heading">#</a></h3>
+<p>Real stacks exhibit dispersion in kinetics, resistance, and transport. A practical parameterization is:</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_i = \bar\theta\,(1 + \delta_i),
+\qquad
+\delta_i \sim \mathcal{N}(0,\sigma_\theta^2)
+\]</div>
+<p>for parameters such as <span class="math notranslate nohighlight">\(j_{0,i}\)</span>, <span class="math notranslate nohighlight">\(R_{\Omega,i}\)</span>, and <span class="math notranslate nohighlight">\(j_{\text{lim},i}\)</span>. Spatially correlated variability (for example, edge vs center cells) is often more realistic than purely independent noise.</p>
+<p>Typical observable consequences are:</p>
+<ul class="simple">
+<li><p>Cell-voltage spread under load</p></li>
+<li><p>Local hot spots and unequal aging rates</p></li>
+<li><p>Different gas purity and crossover margins per cell</p></li>
+</ul>
+<p>These effects motivate distributed sensing and balancing/control strategies (flow balancing, thermal balancing, current derating, and fault-tolerant operation).</p>
+</section>
 </section>
 <section id="thermal-and-fluidic-modeling">
 <h2>Thermal and Fluidic Modeling<a class="headerlink" href="#thermal-and-fluidic-modeling" title="Permalink to this heading">#</a></h2>
-<p><em>Describe coolant, gas, and water management along the stack, including pressure drop models.</em></p>
+<p>Thermal and fluidic models describe how coolant, water, and gases are distributed through channels and manifolds, and how this distribution feeds back into electrochemical performance.</p>
+<section id="coolant-side-modeling">
+<h3>Coolant-side modeling<a class="headerlink" href="#coolant-side-modeling" title="Permalink to this heading">#</a></h3>
+<p>At stack scale, coolant temperature is often modeled with 1D energy balances along the coolant path. For a control volume <span class="math notranslate nohighlight">\(k\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\dot m_{\text{cool}} c_p \left(T_{k+1}-T_k\right) = \dot Q_{\text{gen},k} - \dot Q_{\text{loss},k}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\dot Q_{\text{gen},k}\)</span> is local heat generated by irreversible electrochemical losses and <span class="math notranslate nohighlight">\(\dot Q_{\text{loss},k}\)</span> is heat rejected to ambient or adjacent components.</p>
+<p>In reduced-order dynamic form:</p>
+<div class="math notranslate nohighlight">
+\[
+C_{\text{th},k}\frac{dT_k}{dt} = \dot Q_{\text{gen},k} - h_k A_k\left(T_k - T_{\text{cool},k}\right)
+\]</div>
+<p>This captures the key coupling between current density, temperature gradients, and local cell voltage.</p>
+</section>
+<section id="water-feed-and-recirculation-management">
+<h3>Water feed and recirculation management<a class="headerlink" href="#water-feed-and-recirculation-management" title="Permalink to this heading">#</a></h3>
+<p>Water management is primarily anode-side in PEM electrolysis. Models typically track:</p>
+<ul class="simple">
+<li><p>Feed flow rate and stoichiometric excess</p></li>
+<li><p>Local two-phase distribution (liquid water + oxygen bubbles)</p></li>
+<li><p>Recirculation and separator return flow</p></li>
+</ul>
+<p>Per-cell anode mass balance can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{dm_{\text{liq},i}}{dt} = \dot m_{\text{in},i} - \dot m_{\text{out},i} - \dot m_{\text{cons},i} + \dot m_{\text{return},i}
+\]</div>
+<p>with consumption linked to electrolysis rate. Maintaining sufficient liquid inventory avoids local dry-out and excessive ohmic rise.</p>
+</section>
+<section id="gas-management-h2-and-o2-paths">
+<h3>Gas management (H2 and O2 paths)<a class="headerlink" href="#gas-management-h2-and-o2-paths" title="Permalink to this heading">#</a></h3>
+<p>Gas management models account for production, transport, separation, and pressure control:</p>
+<ul class="simple">
+<li><p>O2 generation and disengagement on anode side</p></li>
+<li><p>H2 production, transport, and drying on cathode side</p></li>
+<li><p>Gas crossover and purity constraints</p></li>
+</ul>
+<p>For each side, species balances combine generation and convective transport:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{dn_{s,i}}{dt} = \dot n_{s,\text{in},i} - \dot n_{s,\text{out},i} + \dot n_{s,\text{gen},i} - \dot n_{s,\text{cross},i}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(s\in\{\mathrm{H_2},\mathrm{O_2},\mathrm{H_2O}\}\)</span>.</p>
+</section>
+<section id="pressure-drop-in-manifolds-and-channels">
+<h3>Pressure drop in manifolds and channels<a class="headerlink" href="#pressure-drop-in-manifolds-and-channels" title="Permalink to this heading">#</a></h3>
+<p>Pressure non-uniformity drives flow maldistribution and therefore cell-to-cell variability. A common manifold/channel pressure model uses Darcy-Weisbach:</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta p = f\,\frac{L}{D_h}\,\frac{\rho u^2}{2}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(f\)</span> is friction factor, <span class="math notranslate nohighlight">\(D_h\)</span> hydraulic diameter, and <span class="math notranslate nohighlight">\(u\)</span> mean velocity.</p>
+<p>For porous transport layers, pressure loss is often represented by Darcy’s law:</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta p = \frac{\mu L}{K}\,u
+\]</div>
+<p>with permeability <span class="math notranslate nohighlight">\(K\)</span>. In two-phase regions, effective friction/permeability corrections are applied to account for gas-liquid interactions.</p>
+</section>
+<section id="coupled-electro-thermal-fluid-feedbacks">
+<h3>Coupled electro-thermal-fluid feedbacks<a class="headerlink" href="#coupled-electro-thermal-fluid-feedbacks" title="Permalink to this heading">#</a></h3>
+<p>The stack exhibits strong bidirectional coupling:</p>
+<ul class="simple">
+<li><p>Higher current increases heat generation and gas void fraction.</p></li>
+<li><p>Temperature rise changes membrane conductivity and kinetics.</p></li>
+<li><p>Flow maldistribution alters local reactant availability and pressure.</p></li>
+<li><p>Local pressure/phase changes modify crossover and transport losses.</p></li>
+</ul>
+<p>Therefore, practical stack simulators solve electrical, thermal, and hydraulic balances together, either in fully coupled form or through staggered time-step updates.</p>
+</section>
+<section id="typical-modeling-assumptions-for-control-oriented-models">
+<h3>Typical modeling assumptions for control-oriented models<a class="headerlink" href="#typical-modeling-assumptions-for-control-oriented-models" title="Permalink to this heading">#</a></h3>
+<p>To reduce complexity while keeping predictive value, control-oriented models commonly assume:</p>
+<ul class="simple">
+<li><p>Quasi-steady pressure field at each control step</p></li>
+<li><p>Lumped coolant temperature per stack segment</p></li>
+<li><p>Effective two-phase correction factors instead of full CFD</p></li>
+<li><p>Aggregate separator dynamics for recirculation loops</p></li>
+</ul>
+<p>These assumptions usually provide a good trade-off between computational cost and fidelity for control design, digital twins, and real-time estimation.</p>
+</section>
 </section>
 <section id="dynamic-behavior-and-transients">
 <h2>Dynamic Behavior and Transients<a class="headerlink" href="#dynamic-behavior-and-transients" title="Permalink to this heading">#</a></h2>
-<p><em>Cover load changes, start-up/shutdown sequences, and interactions with external power systems.</em></p>
+<p>Dynamic models are required when the stack is operated with variable renewable sources, where current commands, thermal inertia, and fluid delays interact on different time scales.</p>
+<section id="load-change-dynamics">
+<h3>Load-change dynamics<a class="headerlink" href="#load-change-dynamics" title="Permalink to this heading">#</a></h3>
+<p>When current is ramped from <span class="math notranslate nohighlight">\(I_1\)</span> to <span class="math notranslate nohighlight">\(I_2\)</span>, the cell voltage response is typically multi-time-scale:</p>
+<ul class="simple">
+<li><p>Fast electrical response (milliseconds to seconds): activation and ohmic terms</p></li>
+<li><p>Intermediate transport response (seconds): gas fraction, flow redistribution, pressure adaptation</p></li>
+<li><p>Slow thermal response (tens of seconds to minutes): stack and coolant temperature evolution</p></li>
+</ul>
+<p>A compact transient representation is:</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\text{stack}}(t) = U_{\text{qs}}\big(I(t),T(t),p(t)\big) + \Delta U_{\text{dyn}}(t)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(U_{\text{qs}}\)</span> is quasi-steady voltage and <span class="math notranslate nohighlight">\(\Delta U_{\text{dyn}}\)</span> captures delay effects (double-layer, transport, and manifold filling).</p>
+<p>Ramp-rate limits are usually imposed to avoid excessive pressure/temperature gradients and local starvation.</p>
+</section>
+<section id="start-up-sequence-modeling">
+<h3>Start-up sequence modeling<a class="headerlink" href="#start-up-sequence-modeling" title="Permalink to this heading">#</a></h3>
+<p>Start-up is constrained by hydration, thermal conditioning, and gas safety. A simplified sequence is:</p>
+<ol class="arabic simple">
+<li><p>Water loop priming and purge</p></li>
+<li><p>Temperature ramp to allowable operating window</p></li>
+<li><p>Pressure stabilization and differential-pressure check</p></li>
+<li><p>Current ramp from near-zero to target operating point</p></li>
+</ol>
+<p>A state-machine model is often used in controls:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Idle</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Pre-fill</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Warm-up</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Pressurize</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Power-producing</span></code></p></li>
+</ul>
+<p>Each transition is guarded by measured thresholds (flow, conductivity, pressure difference, temperature).</p>
+</section>
+<section id="shutdown-and-emergency-transients">
+<h3>Shutdown and emergency transients<a class="headerlink" href="#shutdown-and-emergency-transients" title="Permalink to this heading">#</a></h3>
+<p>Shutdown logic must prevent hazardous gas mixing and thermal shock. Typical controlled shutdown includes:</p>
+<ul class="simple">
+<li><p>Current ramp-down with pressure coordination</p></li>
+<li><p>Purge/vent sequence</p></li>
+<li><p>Pump and valve post-run to remove residual heat</p></li>
+</ul>
+<p>Emergency shutdown (trip) models are more abrupt and should account for residual heat and trapped gases after electrical disconnection.</p>
+</section>
+<section id="interactions-with-external-power-systems">
+<h3>Interactions with external power systems<a class="headerlink" href="#interactions-with-external-power-systems" title="Permalink to this heading">#</a></h3>
+<p>PEM stacks are usually connected through power converters, so dynamic behavior depends on converter control mode:</p>
+<ul class="simple">
+<li><p>Current-controlled mode for hydrogen production tracking</p></li>
+<li><p>Power-controlled mode for grid services or renewable-following</p></li>
+</ul>
+<p>Grid-side disturbances (voltage sag, frequency events, converter limits) propagate to stack current and therefore to gas production and thermal states.</p>
+<p>A simple coupling model is:</p>
+<div class="math notranslate nohighlight">
+\[
+P_{\text{el}}(t) = U_{\text{stack}}(t)\,I(t),
+\qquad
+\tau_I\,\frac{dI}{dt} + I = I_{\text{ref}}(t)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau_I\)</span> represents effective converter/current-loop dynamics.</p>
+</section>
+<section id="key-transient-indicators">
+<h3>Key transient indicators<a class="headerlink" href="#key-transient-indicators" title="Permalink to this heading">#</a></h3>
+<p>For model validation and control tuning, common transient KPIs include:</p>
+<ul class="simple">
+<li><p>Voltage overshoot/undershoot during ramps</p></li>
+<li><p>Time to reach new steady state after a load step</p></li>
+<li><p>Maximum stack temperature and gradient during transients</p></li>
+<li><p>Minimum local flow/pressure margins (starvation risk)</p></li>
+<li><p>Temporary gas purity degradation during start/stop events</p></li>
+</ul>
+<p>These metrics help define safe and efficient operating envelopes for renewable-coupled electrolyzer plants.</p>
+</section>
+</section>
+<section id="bop-models">
+<h2>BoP models<a class="headerlink" href="#bop-models" title="Permalink to this heading">#</a></h2>
+<p>Balance-of-plant (BoP) models extend stack equations with auxiliary subsystems that dominate transient constraints and parasitic power. A control-oriented BoP model usually includes pumps, valves, pressure regulation, thermal loop dynamics, and gas-liquid separation.</p>
+<section id="water-pump-model">
+<h3>Water pump model<a class="headerlink" href="#water-pump-model" title="Permalink to this heading">#</a></h3>
+<p>Water-feed and recirculation pumps are commonly represented by a first-order actuator plus a pump head-flow relation.</p>
+<p>Actuator dynamics:</p>
+<div class="math notranslate nohighlight">
+\[
+\tau_p\,\frac{d\omega_p}{dt} + \omega_p = \omega_{p,\text{ref}}
+\]</div>
+<p>Flow approximation (near operating point):</p>
+<div class="math notranslate nohighlight">
+\[
+\dot m_w \approx k_{p1}\,\omega_p - k_{p2}\,\Delta p
+\]</div>
+<p>Hydraulic power and electrical consumption:</p>
+<div class="math notranslate nohighlight">
+\[
+P_{\text{pump}} = \frac{\Delta p\,\dot V}{\eta_p}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\dot V\)</span> is volumetric flow and <span class="math notranslate nohighlight">\(\eta_p\)</span> is pump efficiency. This term is needed to compute system efficiency, not only stack efficiency.</p>
+</section>
+<section id="pressure-regulation-model">
+<h3>Pressure regulation model<a class="headerlink" href="#pressure-regulation-model" title="Permalink to this heading">#</a></h3>
+<p>Pressure is controlled using back-pressure valves, regulator valves, and optional compressor coordination. A simple manifold pressure state is:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{dp}{dt} = \frac{RT}{V}\left(\dot n_{\text{in}} - \dot n_{\text{out}} + \dot n_{\text{gen}}\right)
+\]</div>
+<p>Valve flow can be represented with an orifice-type relation:</p>
+<div class="math notranslate nohighlight">
+\[
+\dot m_v = C_v\,u_v\,\sqrt{\max(p_{\text{up}}-p_{\text{down}},0)}
+\]</div>
+<p>with valve command <span class="math notranslate nohighlight">\(u_v\in[0,1]\)</span>. Differential-pressure constraints are enforced to protect membrane integrity:</p>
+<div class="math notranslate nohighlight">
+\[
+\left|p_{\text{anode}}-p_{\text{cathode}}\right| \le \Delta p_{\max}
+\]</div>
+</section>
+<section id="temperature-regulation-model">
+<h3>Temperature regulation model<a class="headerlink" href="#temperature-regulation-model" title="Permalink to this heading">#</a></h3>
+<p>Temperature regulation combines coolant flow control and heat-exchanger dynamics. A practical two-state form is:</p>
+<div class="math notranslate nohighlight">
+\[
+C_{\text{st}}\frac{dT_{\text{st}}}{dt} = \dot Q_{\text{irr}} - UA\left(T_{\text{st}}-T_{\text{cool}}\right)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_{\text{cool}}\frac{dT_{\text{cool}}}{dt} = \dot m_{\text{cool}}c_p\left(T_{\text{in}}-T_{\text{cool}}\right) + UA\left(T_{\text{st}}-T_{\text{cool}}\right)
+\]</div>
+<p>Cooling pump and valve commands regulate <span class="math notranslate nohighlight">\(\dot m_{\text{cool}}\)</span> and effective <span class="math notranslate nohighlight">\(UA\)</span> to keep stack temperature within safe operating range.</p>
+</section>
+<section id="gas-liquid-separator-and-recirculation-model">
+<h3>Gas-liquid separator and recirculation model<a class="headerlink" href="#gas-liquid-separator-and-recirculation-model" title="Permalink to this heading">#</a></h3>
+<p>Separators are often modeled with holdup states and phase split efficiency:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{dm_{\ell}}{dt} = \dot m_{\ell,\text{in}} - \dot m_{\ell,\text{out}} - \dot m_{\ell\to g}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\frac{dm_g}{dt} = \dot m_{g,\text{in}} - \dot m_{g,\text{out}} + \dot m_{\ell\to g}
+\]</div>
+<p>Return flow from liquid holdup closes the water loop, while gas outlet quality influences downstream drying and purity metrics.</p>
+</section>
+<section id="compressor-and-downstream-pressure-interface-optional">
+<h3>Compressor and downstream pressure interface (optional)<a class="headerlink" href="#compressor-and-downstream-pressure-interface-optional" title="Permalink to this heading">#</a></h3>
+<p>When high-pressure hydrogen delivery is required, compressor dynamics can be approximated by:</p>
+<div class="math notranslate nohighlight">
+\[
+\tau_c\,\frac{d\dot m_c}{dt} + \dot m_c = \dot m_{c,\text{ref}}
+\]</div>
+<p>with power consumption estimated from pressure ratio and isentropic efficiency. This subsystem can dominate plant-level energy consumption at high delivery pressure.</p>
+</section>
+<section id="bop-control-loops-and-coupling-with-stack-model">
+<h3>BoP control loops and coupling with stack model<a class="headerlink" href="#bop-control-loops-and-coupling-with-stack-model" title="Permalink to this heading">#</a></h3>
+<p>Typical coordinated loops are:</p>
+<ul class="simple">
+<li><p>Current/power loop (converter)</p></li>
+<li><p>Water-flow loop (pump speed)</p></li>
+<li><p>Pressure loop (back-pressure valve)</p></li>
+<li><p>Temperature loop (coolant flow or heat-exchanger bypass)</p></li>
+</ul>
+<p>Because these loops are coupled through pressure, temperature, and two-phase behavior, model predictive or gain-scheduled control is often preferred over independent PI tuning at wide operating range.</p>
+</section>
+<section id="bop-oriented-performance-indicators">
+<h3>BoP-oriented performance indicators<a class="headerlink" href="#bop-oriented-performance-indicators" title="Permalink to this heading">#</a></h3>
+<p>To evaluate BoP model quality and control design, useful KPIs include:</p>
+<ul class="simple">
+<li><p>Auxiliary power fraction: <span class="math notranslate nohighlight">\(P_{\text{aux}}/P_{\text{el}}\)</span></p></li>
+<li><p>Pressure-tracking error and differential-pressure violations</p></li>
+<li><p>Temperature overshoot and settling time</p></li>
+<li><p>Water-starvation margin and separator carryover risk</p></li>
+<li><p>Net system efficiency (including BoP consumption)</p></li>
+</ul>
+</section>
 </section>
 <section id="case-study-stack-simulation-under-load-variation">
 <h2>Case Study: Stack Simulation Under Load Variation<a class="headerlink" href="#case-study-stack-simulation-under-load-variation" title="Permalink to this heading">#</a></h2>
@@ -425,9 +787,41 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multicell-stack-models-and-assumptions">Multicell Stack Models and Assumptions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#thermal-and-fluidic-modeling">Thermal and Fluidic Modeling</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-behavior-and-transients">Dynamic Behavior and Transients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multicell-stack-models-and-assumptions">Multicell Stack Models and Assumptions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-level-electrical-balance">Stack-level electrical balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-and-mass-balances">Species and mass balances</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-thermal-balance">Stack thermal balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manifolding-assumptions">Manifolding assumptions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-to-cell-variability-modeling">Cell-to-cell variability modeling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#thermal-and-fluidic-modeling">Thermal and Fluidic Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coolant-side-modeling">Coolant-side modeling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-feed-and-recirculation-management">Water feed and recirculation management</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-management-h2-and-o2-paths">Gas management (H2 and O2 paths)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pressure-drop-in-manifolds-and-channels">Pressure drop in manifolds and channels</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coupled-electro-thermal-fluid-feedbacks">Coupled electro-thermal-fluid feedbacks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-modeling-assumptions-for-control-oriented-models">Typical modeling assumptions for control-oriented models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-behavior-and-transients">Dynamic Behavior and Transients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-change-dynamics">Load-change dynamics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-up-sequence-modeling">Start-up sequence modeling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shutdown-and-emergency-transients">Shutdown and emergency transients</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactions-with-external-power-systems">Interactions with external power systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-transient-indicators">Key transient indicators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bop-models">BoP models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-pump-model">Water pump model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pressure-regulation-model">Pressure regulation model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temperature-regulation-model">Temperature regulation model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-liquid-separator-and-recirculation-model">Gas-liquid separator and recirculation model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compressor-and-downstream-pressure-interface-optional">Compressor and downstream pressure interface (optional)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bop-control-loops-and-coupling-with-stack-model">BoP control loops and coupling with stack model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bop-oriented-performance-indicators">BoP-oriented performance indicators</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-stack-simulation-under-load-variation">Case Study: Stack Simulation Under Load Variation</a></li>
 </ul>
   </nav></div>

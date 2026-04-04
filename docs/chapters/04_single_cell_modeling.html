@@ -328,7 +328,16 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equations-mass-charge-energy">Governing Equations (Mass, Charge, Energy)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equations-mass-charge-energy">Governing Equations (Mass, Charge, Energy)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-domains-and-state-variables">Model domains and state variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-conservation">Species conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#charge-conservation">Charge conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-conservation">Energy conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-transport-in-membrane-optional-dynamic-hydration">Water transport in membrane (optional dynamic hydration)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#voltage-closure">Voltage closure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-and-interface-conditions">Boundary and interface conditions</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics">Electrochemical Kinetics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-reactions">Electrochemical Reactions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reversible-cell-potential-nernst">Reversible Cell Potential (Nernst)</a></li>
@@ -339,12 +348,14 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-notes">Modeling Notes</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-effective-surface-area-a-mathrm-eff">Estimating the Effective Surface Area <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}\)</span></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#figure-catalyst-layer-schematic">Figure: Catalyst Layer Schematic</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-transport-gas-liquid">Species Transport (gas/liquid)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-balance">Energy Balance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#species-transport-gas-liquid">Species Transport (gas/liquid)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-transport-in-porous-layers">Gas Transport in Porous Layers</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-management-in-membrane">Water Management in Membrane</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-balance">Energy Balance</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-and-1d-modeling-approaches">0D and 1D Modeling Approaches</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-and-calibration">Parameter Estimation and Calibration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-fitting-a-polarization-curve">Case Study: Fitting a Polarization Curve</a></li>
@@ -363,7 +374,101 @@ document.write(`
 <h1>Single Cell Modeling<a class="headerlink" href="#single-cell-modeling" title="Permalink to this heading">#</a></h1>
 <section id="governing-equations-mass-charge-energy">
 <h2>Governing Equations (Mass, Charge, Energy)<a class="headerlink" href="#governing-equations-mass-charge-energy" title="Permalink to this heading">#</a></h2>
-<p><em>Outline mass, charge, and energy balances for membrane, catalyst layers, and channels.</em></p>
+<p>This section organizes the single-cell PEM electrolyzer model as a coupled multiphysics problem over channels, porous transport layers (PTLs), catalyst layers (CLs), and membrane.</p>
+<section id="model-domains-and-state-variables">
+<h3>Model domains and state variables<a class="headerlink" href="#model-domains-and-state-variables" title="Permalink to this heading">#</a></h3>
+<p>Typical primary fields are:</p>
+<ul class="simple">
+<li><p>Species concentrations or partial pressures: <span class="math notranslate nohighlight">\(c_k\)</span> or <span class="math notranslate nohighlight">\(p_k\)</span></p></li>
+<li><p>Potentials: solid phase <span class="math notranslate nohighlight">\(\phi_{\mathrm{sol}}\)</span>, ionic phase <span class="math notranslate nohighlight">\(\phi_{\mathrm{mem}}\)</span></p></li>
+<li><p>Temperature: <span class="math notranslate nohighlight">\(T\)</span></p></li>
+<li><p>Membrane hydration variable: <span class="math notranslate nohighlight">\(\lambda\)</span> (if hydration dynamics are included)</p></li>
+</ul>
+<p>The model is closed by constitutive laws for reaction kinetics, transport properties, and source terms.</p>
+</section>
+<section id="species-conservation">
+<h3>Species conservation<a class="headerlink" href="#species-conservation" title="Permalink to this heading">#</a></h3>
+<p>For each species <span class="math notranslate nohighlight">\(k\)</span> in a control volume:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial c_k}{\partial t} + \nabla\cdot\mathbf{N}_k = S_k
+\]</div>
+<p>with flux (dilute convection-diffusion form):</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{N}_k = -D_{k,\mathrm{eff}}\nabla c_k + c_k\mathbf{u}
+\]</div>
+<p>and reaction source in CLs:</p>
+<div class="math notranslate nohighlight">
+\[
+S_k = \nu_k\,\frac{i}{nF}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nu_k\)</span> is stoichiometric coefficient, <span class="math notranslate nohighlight">\(i\)</span> is local current density, and <span class="math notranslate nohighlight">\(n\)</span> is electron number of the half-reaction.</p>
+</section>
+<section id="charge-conservation">
+<h3>Charge conservation<a class="headerlink" href="#charge-conservation" title="Permalink to this heading">#</a></h3>
+<p>Charge transport is split between electronic and protonic phases.</p>
+<p>Electronic (solid matrix):</p>
+<div class="math notranslate nohighlight">
+\[
+-\nabla\cdot\left(\sigma_{\mathrm{sol}}\nabla\phi_{\mathrm{sol}}\right)=S_{\mathrm{chg}}
+\]</div>
+<p>Ionic (membrane/ionomer):</p>
+<div class="math notranslate nohighlight">
+\[
+-\nabla\cdot\left(\kappa_{\mathrm{mem}}\nabla\phi_{\mathrm{mem}}\right)=-S_{\mathrm{chg}}
+\]</div>
+<p>In CLs, source coupling is typically:</p>
+<div class="math notranslate nohighlight">
+\[
+S_{\mathrm{chg}} = a_{\mathrm{eff}}\,i_{\mathrm{BV}}
+\]</div>
+<p>which enforces current continuity between phases.</p>
+</section>
+<section id="energy-conservation">
+<h3>Energy conservation<a class="headerlink" href="#energy-conservation" title="Permalink to this heading">#</a></h3>
+<p>A representative energy balance is:</p>
+<div class="math notranslate nohighlight">
+\[
+\rho c_p\frac{\partial T}{\partial t} + \rho c_p\mathbf{u}\cdot\nabla T
+= \nabla\cdot(k_{\mathrm{eff}}\nabla T) + q_{\mathrm{rxn}} + q_{\Omega} + q_{\mathrm{phase}}
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(q_{\mathrm{rxn}}\)</span> includes irreversible electrochemical heat</p></li>
+<li><p><span class="math notranslate nohighlight">\(q_{\Omega}\)</span> is Joule heating in electronic/ionic paths</p></li>
+<li><p><span class="math notranslate nohighlight">\(q_{\mathrm{phase}}\)</span> captures latent effects (if two-phase model is used)</p></li>
+</ul>
+</section>
+<section id="water-transport-in-membrane-optional-dynamic-hydration">
+<h3>Water transport in membrane (optional dynamic hydration)<a class="headerlink" href="#water-transport-in-membrane-optional-dynamic-hydration" title="Permalink to this heading">#</a></h3>
+<p>When hydration is modeled explicitly, a common form is:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{N}_{\mathrm{H_2O}} = -D_{\lambda}\nabla\lambda + n_{\mathrm{drag}}\frac{i}{F}
+\]</div>
+<p>combining back-diffusion and electro-osmotic drag.</p>
+</section>
+<section id="voltage-closure">
+<h3>Voltage closure<a class="headerlink" href="#voltage-closure" title="Permalink to this heading">#</a></h3>
+<p>Cell voltage is computed from reversible potential and losses:</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\mathrm{cell}} = E_{\mathrm{rev}} + \eta_{\mathrm{act,an}} + \eta_{\mathrm{act,ca}} + \eta_{\Omega} + \eta_{\mathrm{mt}}
+\]</div>
+<p>where each overpotential is obtained from local fields and integrated or averaged according to model fidelity.</p>
+</section>
+<section id="boundary-and-interface-conditions">
+<h3>Boundary and interface conditions<a class="headerlink" href="#boundary-and-interface-conditions" title="Permalink to this heading">#</a></h3>
+<p>A consistent setup typically includes:</p>
+<ul class="simple">
+<li><p>Inlet channels: specified flow/composition/temperature</p></li>
+<li><p>Outlets: specified pressure or convective outflow</p></li>
+<li><p>Current collectors: imposed current density or potential</p></li>
+<li><p>Layer interfaces: continuity of species, heat, and charge fluxes</p></li>
+</ul>
+<p>This structure yields a solvable coupled PDE/DAE system for single-cell simulation, parameter estimation, and control-oriented model reduction.</p>
+</section>
 </section>
 <section id="electrochemical-kinetics">
 <h2>Electrochemical Kinetics<a class="headerlink" href="#electrochemical-kinetics" title="Permalink to this heading">#</a></h2>
@@ -487,8 +592,9 @@ $<span class="math notranslate nohighlight">\(
 </figcaption>
 </figure>
 </section>
+</section>
 <section id="species-transport-gas-liquid">
-<h3>Species Transport (gas/liquid)<a class="headerlink" href="#species-transport-gas-liquid" title="Permalink to this heading">#</a></h3>
+<h2>Species Transport (gas/liquid)<a class="headerlink" href="#species-transport-gas-liquid" title="Permalink to this heading">#</a></h2>
 <p>Fickian form in channels:
 $<span class="math notranslate nohighlight">\(
 \frac{\partial c_k}{\partial t} + \nabla \cdot(-D_k\nabla c_k + c_k \mathbf{u}) = S_k,
@@ -547,15 +653,6 @@ $<span class="math notranslate nohighlight">\(
 </ul>
 <p><strong>Coupling to reaction</strong>
 Species source <span class="math notranslate nohighlight">\(S_k = \nu_k\, i/(nF)\)</span> enters the conservation equation inside the CL. Mass-transport limitations feed back into kinetics via surface concentrations/activities used in Nernst and exchange current density <span class="math notranslate nohighlight">\(i_0\)</span>.</p>
-</section>
-<section id="energy-balance">
-<h3>Energy Balance<a class="headerlink" href="#energy-balance" title="Permalink to this heading">#</a></h3>
-<p>Lumped solid/fluid energy balance (example for a 0D cell control volume):
-$<span class="math notranslate nohighlight">\(
-\rho c_p \frac{dT}{dt} = \nabla \cdot (k \nabla T) + i\,\eta_{\text{act}} + i\,\eta_{\text{ohm}} - hA(T-T_{\infty}) + q_{\text{phase}},
-\)</span><span class="math notranslate nohighlight">\(
-where the source terms gather irreversible heating (activation + ohmic) and phase-change enthalpy if present. In 1D through-plane models, use layer-specific \)</span>k$ and include anisotropy in GDL/CL.</p>
-</section>
 <section id="gas-transport-in-porous-layers">
 <h3>Gas Transport in Porous Layers<a class="headerlink" href="#gas-transport-in-porous-layers" title="Permalink to this heading">#</a></h3>
 <p>Often represented with Darcy or Darcy–Forchheimer plus species convection-diffusion; a simple effective-diffusion model in CL/PTL is
@@ -572,6 +669,14 @@ with porosity \)</span>\varepsilon<span class="math notranslate nohighlight">\( 
 <li><p>Water uptake isothermal isotherm links <span class="math notranslate nohighlight">\(\lambda\)</span> and water activity <span class="math notranslate nohighlight">\(a_w\)</span> at interfaces.</p></li>
 </ul>
 </section>
+</section>
+<section id="energy-balance">
+<h2>Energy Balance<a class="headerlink" href="#energy-balance" title="Permalink to this heading">#</a></h2>
+<p>Lumped solid/fluid energy balance (example for a 0D cell control volume):
+$<span class="math notranslate nohighlight">\(
+\rho c_p \frac{dT}{dt} = \nabla \cdot (k \nabla T) + i\,\eta_{\text{act}} + i\,\eta_{\text{ohm}} - hA(T-T_{\infty}) + q_{\text{phase}},
+\)</span><span class="math notranslate nohighlight">\(
+where the source terms gather irreversible heating (activation + ohmic) and phase-change enthalpy if present. In 1D through-plane models, use layer-specific \)</span>k$ and include anisotropy in GDL/CL.</p>
 </section>
 <section id="d-and-1d-modeling-approaches">
 <h2>0D and 1D Modeling Approaches<a class="headerlink" href="#d-and-1d-modeling-approaches" title="Permalink to this heading">#</a></h2>
@@ -651,7 +756,16 @@ with porosity \)</span>\varepsilon<span class="math notranslate nohighlight">\( 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equations-mass-charge-energy">Governing Equations (Mass, Charge, Energy)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equations-mass-charge-energy">Governing Equations (Mass, Charge, Energy)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-domains-and-state-variables">Model domains and state variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-conservation">Species conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#charge-conservation">Charge conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-conservation">Energy conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-transport-in-membrane-optional-dynamic-hydration">Water transport in membrane (optional dynamic hydration)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#voltage-closure">Voltage closure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-and-interface-conditions">Boundary and interface conditions</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics">Electrochemical Kinetics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-reactions">Electrochemical Reactions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reversible-cell-potential-nernst">Reversible Cell Potential (Nernst)</a></li>
@@ -662,12 +776,14 @@ with porosity \)</span>\varepsilon<span class="math notranslate nohighlight">\( 
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-notes">Modeling Notes</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-effective-surface-area-a-mathrm-eff">Estimating the Effective Surface Area <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}\)</span></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#figure-catalyst-layer-schematic">Figure: Catalyst Layer Schematic</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-transport-gas-liquid">Species Transport (gas/liquid)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-balance">Energy Balance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#species-transport-gas-liquid">Species Transport (gas/liquid)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-transport-in-porous-layers">Gas Transport in Porous Layers</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-management-in-membrane">Water Management in Membrane</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-balance">Energy Balance</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-and-1d-modeling-approaches">0D and 1D Modeling Approaches</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-and-calibration">Parameter Estimation and Calibration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-fitting-a-polarization-curve">Case Study: Fitting a Polarization Curve</a></li>

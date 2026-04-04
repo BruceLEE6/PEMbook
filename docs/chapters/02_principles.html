@@ -333,9 +333,27 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-and-energy-efficiency">Faradaic and Energy Efficiency</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics-and-overpotentials">Electrochemical Kinetics and Overpotentials</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transport-phenomena-in-pem-cells">Transport Phenomena in PEM Cells</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-efficiency-and-energy-efficiency">Faradaic Efficiency and Energy Efficiency</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics-and-overpotentials">Electrochemical Kinetics and Overpotentials</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#butler-volmer-kinetics">Butler-Volmer Kinetics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tafel-approximation">Tafel Approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ohmic-overpotential">Ohmic Overpotential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mass-transport-overpotential">Mass-Transport Overpotential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-pem-parameter-ranges">Typical PEM Parameter Ranges</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transport-phenomena-in-pem-cells">Transport Phenomena in PEM Cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-and-proton-transport-in-the-membrane">Water and Proton Transport in the Membrane</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reactant-product-gas-transport">Reactant/Product Gas Transport</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-crossover-and-purity">Gas Crossover and Purity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thermal-transport-and-water-management">Thermal Transport and Water Management</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-efficiency-and-energy-efficiency">Faradaic Efficiency and Energy Efficiency</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-efficiency">Faradaic Efficiency</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-efficiency">Energy Efficiency</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#influence-of-operating-conditions">Influence of Operating Conditions</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -405,15 +423,158 @@ E = E^{0} + \frac{RT}{nF} \ln\!\left( p_{\mathrm{H_2}}\, p_{\mathrm{O_2}}^{1/2} 
 </section>
 <section id="electrochemical-kinetics-and-overpotentials">
 <h2>Electrochemical Kinetics and Overpotentials<a class="headerlink" href="#electrochemical-kinetics-and-overpotentials" title="Permalink to this heading">#</a></h2>
-<p><em>Outline kinetics, activation overpotential models, and typical parameter ranges.</em></p>
+<p>Real electrolyzer operation requires a cell voltage above the reversible value because of kinetic, ohmic, and transport losses:</p>
+<div class="math notranslate nohighlight">
+\[
+U_{\text{cell}} = E_{\text{rev}} + \eta_{\text{act,a}} + \eta_{\text{act,c}} + \eta_{\Omega} + \eta_{\text{mt}}
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\eta_{\text{act,a}}\)</span> and <span class="math notranslate nohighlight">\(\eta_{\text{act,c}}\)</span> are activation overpotentials (anode and cathode)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta_{\Omega}\)</span> is the ohmic overpotential (membrane, contacts, plates)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta_{\text{mt}}\)</span> is the mass-transport or concentration overpotential</p></li>
+</ul>
+<section id="butler-volmer-kinetics">
+<h3>Butler-Volmer Kinetics<a class="headerlink" href="#butler-volmer-kinetics" title="Permalink to this heading">#</a></h3>
+<p>At each electrode, current density and activation overpotential are linked by the Butler-Volmer equation:</p>
+<div class="math notranslate nohighlight">
+\[
+j = j_0 \left[\exp\!\left(\frac{\alpha_a F\eta_{\text{act}}}{RT}\right) - \exp\!\left(-\frac{\alpha_c F\eta_{\text{act}}}{RT}\right)\right]
+\]</div>
+<p>with exchange current density <span class="math notranslate nohighlight">\(j_0\)</span> and transfer coefficients <span class="math notranslate nohighlight">\(\alpha_a,\alpha_c\)</span>.</p>
+<p>For PEM water electrolysis, the oxygen evolution reaction (OER, anode) is usually the dominant kinetic limitation, while the hydrogen evolution reaction (HER, cathode) is faster.</p>
+</section>
+<section id="tafel-approximation">
+<h3>Tafel Approximation<a class="headerlink" href="#tafel-approximation" title="Permalink to this heading">#</a></h3>
+<p>At moderate-to-high overpotential, Butler-Volmer simplifies to a Tafel form:</p>
+<div class="math notranslate nohighlight">
+\[
+\eta_{\text{act}} \approx \frac{2.303RT}{\alpha F}\log_{10}\!\left(\frac{j}{j_0}\right)
+\;=\; b\,\log_{10}\!\left(\frac{j}{j_0}\right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(b\)</span> is the Tafel slope (V/dec). This form is commonly used for parameter identification from polarization curves.</p>
+</section>
+<section id="ohmic-overpotential">
+<h3>Ohmic Overpotential<a class="headerlink" href="#ohmic-overpotential" title="Permalink to this heading">#</a></h3>
+<p>Ohmic loss is often modeled as:</p>
+<div class="math notranslate nohighlight">
+\[
+\eta_{\Omega} = j\,R_{\text{ASR}}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(R_{\text{ASR}}\)</span> is the area-specific resistance (membrane plus electronic/contact contributions). Membrane hydration and temperature strongly affect this term.</p>
+</section>
+<section id="mass-transport-overpotential">
+<h3>Mass-Transport Overpotential<a class="headerlink" href="#mass-transport-overpotential" title="Permalink to this heading">#</a></h3>
+<p>At high current density, reactant/product transport limitations can be represented by:</p>
+<div class="math notranslate nohighlight">
+\[
+\eta_{\text{mt}} = -\frac{RT}{nF}\ln\!\left(1-\frac{j}{j_{\text{lim}}}\right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(j_{\text{lim}}\)</span> is an effective limiting current density. In PEM electrolysis, this term becomes more significant at high utilization, inadequate water feed, or poor gas removal.</p>
+</section>
+<section id="typical-pem-parameter-ranges">
+<h3>Typical PEM Parameter Ranges<a class="headerlink" href="#typical-pem-parameter-ranges" title="Permalink to this heading">#</a></h3>
+<p>Representative values used in system-level PEM models are:</p>
+<ul class="simple">
+<li><p>Current density: <span class="math notranslate nohighlight">\(1\)</span> to <span class="math notranslate nohighlight">\(3\,\mathrm{A\,cm^{-2}}\)</span> (up to higher values in advanced stacks)</p></li>
+<li><p>Cell voltage under load: about <span class="math notranslate nohighlight">\(1.8\)</span> to <span class="math notranslate nohighlight">\(2.2\,\mathrm{V}\)</span></p></li>
+<li><p>OER Tafel slope: typically <span class="math notranslate nohighlight">\(40\)</span> to <span class="math notranslate nohighlight">\(80\,\mathrm{mV\,dec^{-1}}\)</span></p></li>
+<li><p>HER Tafel slope: typically <span class="math notranslate nohighlight">\(20\)</span> to <span class="math notranslate nohighlight">\(40\,\mathrm{mV\,dec^{-1}}\)</span></p></li>
+<li><p>Area-specific resistance (ASR): often around <span class="math notranslate nohighlight">\(0.1\)</span> to <span class="math notranslate nohighlight">\(0.3\,\Omega\,\mathrm{cm^2}\)</span> (technology- and condition-dependent)</p></li>
+</ul>
+<p>These ranges vary with catalyst loading, membrane thickness, temperature, pressure, and water management.</p>
+</section>
 </section>
 <section id="transport-phenomena-in-pem-cells">
 <h2>Transport Phenomena in PEM Cells<a class="headerlink" href="#transport-phenomena-in-pem-cells" title="Permalink to this heading">#</a></h2>
-<p><em>Summarize mass transport, membrane hydration, and gas management effects.</em></p>
+<p>Transport processes strongly couple electrochemistry, ohmic losses, and durability in PEM electrolyzers. The main coupled phenomena are water transport, proton transport, gas transport, and heat transport.</p>
+<section id="water-and-proton-transport-in-the-membrane">
+<h3>Water and Proton Transport in the Membrane<a class="headerlink" href="#water-and-proton-transport-in-the-membrane" title="Permalink to this heading">#</a></h3>
+<p>Proton conduction in the membrane depends on hydration state and temperature. A common local relation is:</p>
+<div class="math notranslate nohighlight">
+\[
+i_{\mathrm{H^+}} = -\kappa_{\mathrm{m}}(\lambda, T)\,\nabla \phi_{\mathrm{m}}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\kappa_{\mathrm{m}}\)</span> is membrane proton conductivity, <span class="math notranslate nohighlight">\(\lambda\)</span> is membrane water content, and <span class="math notranslate nohighlight">\(\phi_{\mathrm{m}}\)</span> is ionic potential.</p>
+<p>Membrane hydration evolves through competing mechanisms:</p>
+<ul class="simple">
+<li><p>Electro-osmotic drag (water carried from anode to cathode with protons)</p></li>
+<li><p>Back-diffusion (water diffusion from wetter to drier side)</p></li>
+<li><p>Hydraulic permeation under pressure gradients</p></li>
+</ul>
+<p>Insufficient hydration increases membrane resistance and accelerates degradation risk; excessive water accumulation can exacerbate gas transport limitations.</p>
+</section>
+<section id="reactant-product-gas-transport">
+<h3>Reactant/Product Gas Transport<a class="headerlink" href="#reactant-product-gas-transport" title="Permalink to this heading">#</a></h3>
+<p>At the anode, liquid water must reach catalyst sites while generated oxygen must be removed. At the cathode, hydrogen removal and water crossover management are critical.</p>
+<p>Mass-transport limitations can be represented by an effective concentration overpotential, and they become important at high current density, high stoichiometric utilization, or inadequate channel/porous-layer design.</p>
+<p>For modeling, gas-side transport is often represented with:</p>
+<ul class="simple">
+<li><p>Channel-scale pressure-drop and species-balance equations</p></li>
+<li><p>Effective diffusivity models in porous transport layers (PTLs)</p></li>
+<li><p>Interfacial source terms linking electrochemical rates to local composition</p></li>
+</ul>
+</section>
+<section id="gas-crossover-and-purity">
+<h3>Gas Crossover and Purity<a class="headerlink" href="#gas-crossover-and-purity" title="Permalink to this heading">#</a></h3>
+<p>Hydrogen and oxygen can permeate through the membrane by diffusion and pressure-driven transport. Crossover increases with pressure differential and can affect:</p>
+<ul class="simple">
+<li><p>Product gas purity</p></li>
+<li><p>Faradaic efficiency at low current density</p></li>
+<li><p>Safety margins due to combustible mixtures</p></li>
+</ul>
+<p>Consequently, pressure control and membrane condition monitoring are central in high-pressure PEM operation.</p>
+</section>
+<section id="thermal-transport-and-water-management">
+<h3>Thermal Transport and Water Management<a class="headerlink" href="#thermal-transport-and-water-management" title="Permalink to this heading">#</a></h3>
+<p>Cell temperature is determined by Joule heating, activation losses, and heat removal through flow fields and plates. Temperature rise can improve kinetics and conductivity up to a point, but excessive thermal gradients may accelerate aging.</p>
+<p>A practical control objective is to maintain a balanced operating window in which:</p>
+<ul class="simple">
+<li><p>Membrane stays sufficiently hydrated</p></li>
+<li><p>Reactant supply avoids starvation</p></li>
+<li><p>Gas evacuation prevents local accumulation</p></li>
+<li><p>Temperature remains within stack design limits</p></li>
+</ul>
+</section>
 </section>
 <section id="faradaic-efficiency-and-energy-efficiency">
 <h2>Faradaic Efficiency and Energy Efficiency<a class="headerlink" href="#faradaic-efficiency-and-energy-efficiency" title="Permalink to this heading">#</a></h2>
-<p><em>Discuss how operating conditions, temperature, and pressure influence efficiency metrics.</em></p>
+<p>Efficiency metrics quantify how effectively electrical input is converted into hydrogen.</p>
+<section id="faradaic-efficiency">
+<h3>Faradaic Efficiency<a class="headerlink" href="#faradaic-efficiency" title="Permalink to this heading">#</a></h3>
+<p>Faradaic efficiency reflects the fraction of current that produces hydrogen:</p>
+<div class="math notranslate nohighlight">
+\[
+\eta_F = \frac{\dot n_{\mathrm{H_2,actual}}}{\dot n_{\mathrm{H_2,ideal}}}
+= \frac{\dot n_{\mathrm{H_2,actual}}}{I/(2F)}
+\]</div>
+<p>In ideal operation <span class="math notranslate nohighlight">\(\eta_F \approx 1\)</span>, but it can decrease due to gas crossover, parasitic side reactions, and measurement uncertainties. In PEM systems, faradaic efficiency is often high at nominal load and can drop at very low current density where crossover is relatively more important.</p>
+</section>
+<section id="energy-efficiency">
+<h3>Energy Efficiency<a class="headerlink" href="#energy-efficiency" title="Permalink to this heading">#</a></h3>
+<p>Voltage-based energy efficiency can be written as:</p>
+<div class="math notranslate nohighlight">
+\[
+\eta_E = \eta_F\,\frac{E_{\mathrm{rev}}}{U_{\mathrm{cell}}}
+\]</div>
+<p>or, using thermodynamic quantities,</p>
+<div class="math notranslate nohighlight">
+\[
+\eta_E = \frac{\dot n_{\mathrm{H_2}}\,\Delta G}{P_{\mathrm{el}}}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(P_{\mathrm{el}} = U_{\mathrm{cell}} I\)</span>.</p>
+<p>Because <span class="math notranslate nohighlight">\(U_{\mathrm{cell}}\)</span> includes all overpotentials, reducing activation, ohmic, and transport losses directly improves efficiency.</p>
+</section>
+<section id="influence-of-operating-conditions">
+<h3>Influence of Operating Conditions<a class="headerlink" href="#influence-of-operating-conditions" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Current density: increasing current usually increases production rate but also raises overpotentials, which lowers voltage efficiency.</p></li>
+<li><p>Temperature: moderate temperature increase generally improves kinetics and membrane conductivity, reducing voltage losses; too high temperatures can affect durability.</p></li>
+<li><p>Pressure: higher pressure reduces downstream compression demand and changes reversible voltage, but can increase crossover and impose stronger mechanical constraints.</p></li>
+<li><p>Water feed and flow management: poor distribution can induce local dry-out or flooding, increasing both ohmic and transport losses.</p></li>
+</ul>
+<p>In practice, optimal operation is a multi-objective trade-off between hydrogen production rate, electrical efficiency, gas purity, and long-term stack health.</p>
+</section>
 </section>
 </section>
 
@@ -486,9 +647,27 @@ E = E^{0} + \frac{RT}{nF} \ln\!\left( p_{\mathrm{H_2}}\, p_{\mathrm{O_2}}^{1/2} 
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-and-energy-efficiency">Faradaic and Energy Efficiency</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics-and-overpotentials">Electrochemical Kinetics and Overpotentials</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transport-phenomena-in-pem-cells">Transport Phenomena in PEM Cells</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-efficiency-and-energy-efficiency">Faradaic Efficiency and Energy Efficiency</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics-and-overpotentials">Electrochemical Kinetics and Overpotentials</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#butler-volmer-kinetics">Butler-Volmer Kinetics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tafel-approximation">Tafel Approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ohmic-overpotential">Ohmic Overpotential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mass-transport-overpotential">Mass-Transport Overpotential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-pem-parameter-ranges">Typical PEM Parameter Ranges</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transport-phenomena-in-pem-cells">Transport Phenomena in PEM Cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-and-proton-transport-in-the-membrane">Water and Proton Transport in the Membrane</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reactant-product-gas-transport">Reactant/Product Gas Transport</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-crossover-and-purity">Gas Crossover and Purity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thermal-transport-and-water-management">Thermal Transport and Water Management</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-efficiency-and-energy-efficiency">Faradaic Efficiency and Energy Efficiency</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-efficiency">Faradaic Efficiency</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-efficiency">Energy Efficiency</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#influence-of-operating-conditions">Influence of Operating Conditions</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

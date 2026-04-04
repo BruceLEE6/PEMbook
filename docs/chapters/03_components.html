@@ -326,12 +326,31 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pem-cell-and-stack-design">PEM Cell and Stack Design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-components">Cell Components</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catalyst-layers-and-membranes">Catalyst Layers and Membranes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pem-cell-and-stack-design">PEM Cell and Stack Design</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-level-design">Cell level design</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-level-design">Stack level design</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#balance-of-plant-bop">Balance of Plant (BoP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-components">Cell Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#membranes">Membranes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catalysts">Catalysts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ptls">PTLs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bipolar-plates-and-end-plates">Bipolar plates and end plates</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#balance-of-plant-bop">Balance of Plant (BoP)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-treatment-and-make-up-unit">Water treatment and make-up unit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feed-tank-and-circulation-loop">Feed tank and circulation loop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pumps-and-flow-control-valves">Pumps and flow control valves</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-exchangers-and-thermal-loop">Heat exchangers and thermal loop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-liquid-separators">Gas-liquid separators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dryers-and-gas-conditioning">Dryers and gas conditioning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pressure-regulation-and-compression">Pressure regulation and compression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#power-electronics-and-electrical-protection">Power electronics and electrical protection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sensors-diagnostics-and-control-system">Sensors, diagnostics, and control system</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#safety-subsystem-and-shutdown-logic">Safety subsystem and shutdown logic</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aging-and-degradation-mechanisms">Aging and Degradation Mechanisms</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#characterization-methods">Characterization Methods</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-impedance-spectroscopy-eis">Electrochemical Impedance Spectroscopy (EIS)</a></li>
@@ -355,40 +374,221 @@ document.write(`
 <h1>System Components and Architectures<a class="headerlink" href="#system-components-and-architectures" title="Permalink to this heading">#</a></h1>
 <section id="pem-cell-and-stack-design">
 <h2>PEM Cell and Stack Design<a class="headerlink" href="#pem-cell-and-stack-design" title="Permalink to this heading">#</a></h2>
-<p>Basic structure includes anode, cathode, membrane, and flow fields. Stack designs vary by manufacturer and performance targets.</p>
+<section id="cell-level-design">
+<h3>Cell level design<a class="headerlink" href="#cell-level-design" title="Permalink to this heading">#</a></h3>
+<p>A PEM electrolyzer cell is built around a membrane-electrode assembly (MEA) that couples electrochemical conversion with fluid, thermal, and electrical functions. At single-cell level, the main elements are:</p>
+<ul class="simple">
+<li><p>Anode catalyst layer (oxygen evolution side)</p></li>
+<li><p>Cathode catalyst layer (hydrogen evolution side)</p></li>
+<li><p>Proton exchange membrane (ionic conductor and gas separator)</p></li>
+<li><p>Porous transport layers (PTLs)</p></li>
+<li><p>Bipolar plates and flow fields</p></li>
+</ul>
+</section>
+<section id="stack-level-design">
+<h3>Stack level design<a class="headerlink" href="#stack-level-design" title="Permalink to this heading">#</a></h3>
+<p>In stack form, many cells are connected electrically in series to reach the required DC voltage, while water and thermal management circuits are distributed through common manifolds. Stack architecture must balance three objectives:</p>
+<ul class="simple">
+<li><p>High efficiency (low overpotential and ohmic loss)</p></li>
+<li><p>Uniformity (current, temperature, and flow distribution across cells)</p></li>
+<li><p>Durability (mechanical, chemical, and electrochemical robustness)</p></li>
+</ul>
+<p>Design choices such as flow-field topology (parallel, serpentine, interdigitated), compression strategy, and manifold geometry strongly affect pressure drop, local reactant availability, and degradation gradients.</p>
+</section>
 </section>
 <section id="cell-components">
 <h2>Cell Components<a class="headerlink" href="#cell-components" title="Permalink to this heading">#</a></h2>
-<section id="catalyst-layers-and-membranes">
-<h3>Catalyst Layers and Membranes<a class="headerlink" href="#catalyst-layers-and-membranes" title="Permalink to this heading">#</a></h3>
-<p>Catalyst selection affects efficiency and cost. Membranes must ensure high proton conductivity and chemical stability.</p>
+<section id="membranes">
+<h3>Membranes<a class="headerlink" href="#membranes" title="Permalink to this heading">#</a></h3>
+<p>The membrane performs several critical functions simultaneously:</p>
+<ul class="simple">
+<li><p>Proton conduction from anode to cathode</p></li>
+<li><p>Electronic insulation between electrodes</p></li>
+<li><p>Separation of hydrogen and oxygen streams</p></li>
+<li><p>Mechanical barrier under differential pressure</p></li>
+</ul>
+<p>Key membrane requirements include high proton conductivity, low gas permeability, chemical stability in oxidative environments, and mechanical durability under hydration/dehydration cycling.</p>
+</section>
+<section id="catalysts">
+<h3>Catalysts<a class="headerlink" href="#catalysts" title="Permalink to this heading">#</a></h3>
+<p>Catalyst layers are typically porous composites of catalyst particles, ionomer, and void volume. Their role is to provide active electrochemical sites and conductive pathways for electrons, protons, and reactants.</p>
+<p>At the anode, oxygen evolution kinetics are relatively sluggish and often require iridium-based catalysts. At the cathode, hydrogen evolution is faster and generally uses lower catalyst loading than the anode side. Catalyst utilization depends not only on intrinsic activity but also on microstructure, ionomer distribution, and PTL contact quality.</p>
+</section>
+<section id="ptls">
+<h3>PTLs<a class="headerlink" href="#ptls" title="Permalink to this heading">#</a></h3>
+<p>PTLs and interfaces are equally important. Titanium-based anode PTLs are common due to corrosion resistance, but contact resistance and oxide growth can increase stack losses over time.</p>
+</section>
+<section id="bipolar-plates-and-end-plates">
+<h3>Bipolar plates and end plates<a class="headerlink" href="#bipolar-plates-and-end-plates" title="Permalink to this heading">#</a></h3>
 </section>
 </section>
 <section id="balance-of-plant-bop">
 <h2>Balance of Plant (BoP)<a class="headerlink" href="#balance-of-plant-bop" title="Permalink to this heading">#</a></h2>
-<p>Includes pumps, compressors, humidifiers, and control electronics essential for operation and safety.</p>
+<p>The balance of plant (BoP) determines how effectively the stack can be operated in real systems. Typical BoP subsystems include:</p>
+<ul class="simple">
+<li><p>Water conditioning and feed (purification, circulation, degassing)</p></li>
+<li><p>Thermal management (cooling loops, heat exchangers, temperature control)</p></li>
+<li><p>Gas handling (phase separation, drying, pressure regulation, optional compression)</p></li>
+<li><p>Electrical interface (power converter, current control, protections)</p></li>
+<li><p>Instrumentation and controls (pressure, temperature, flow, voltage diagnostics)</p></li>
+</ul>
+<section id="water-treatment-and-make-up-unit">
+<h3>Water treatment and make-up unit<a class="headerlink" href="#water-treatment-and-make-up-unit" title="Permalink to this heading">#</a></h3>
+<p>Water quality is critical for PEM durability because ionic contaminants can poison catalysts, increase membrane resistance, and accelerate degradation. A typical treatment train includes:</p>
+<ul class="simple">
+<li><p>Pretreatment filters (particulates and organics)</p></li>
+<li><p>Deionization/polishing cartridges</p></li>
+<li><p>Conductivity monitoring and alarms</p></li>
+</ul>
+<p>In practice, this subsystem must maintain stable feedwater conductivity, provide sufficient make-up flow, and avoid introducing dissolved gases that complicate downstream separation.</p>
+</section>
+<section id="feed-tank-and-circulation-loop">
+<h3>Feed tank and circulation loop<a class="headerlink" href="#feed-tank-and-circulation-loop" title="Permalink to this heading">#</a></h3>
+<p>The feed tank and recirculation loop stabilize hydraulic operation and ensure continuous water supply to the anode side. Main functions are:</p>
+<ul class="simple">
+<li><p>Buffering flow transients during power changes</p></li>
+<li><p>Supplying adequate stoichiometric excess water</p></li>
+<li><p>Supporting bubble removal and thermal conditioning</p></li>
+</ul>
+<p>Insufficient circulation can create local starvation and elevated transport losses; excessive circulation increases parasitic pumping power.</p>
+</section>
+<section id="pumps-and-flow-control-valves">
+<h3>Pumps and flow control valves<a class="headerlink" href="#pumps-and-flow-control-valves" title="Permalink to this heading">#</a></h3>
+<p>Pumps provide pressure head and flow-rate control, while valves distribute water and control purge/drain operations. Key design considerations include:</p>
+<ul class="simple">
+<li><p>Dynamic response to stack load ramps</p></li>
+<li><p>Compatibility with deionized water</p></li>
+<li><p>Reliability under frequent cycling</p></li>
+</ul>
+<p>Variable-speed pump control is often used to track stack demand while minimizing auxiliary energy consumption.</p>
+</section>
+<section id="heat-exchangers-and-thermal-loop">
+<h3>Heat exchangers and thermal loop<a class="headerlink" href="#heat-exchangers-and-thermal-loop" title="Permalink to this heading">#</a></h3>
+<p>The thermal subsystem removes irreversible losses and keeps stack temperature in the target operating window. It typically contains:</p>
+<ul class="simple">
+<li><p>Coolant loop pump</p></li>
+<li><p>Plate or shell-and-tube heat exchanger</p></li>
+<li><p>Temperature sensors and control valves</p></li>
+</ul>
+<p>Poor thermal regulation can lead to spatial temperature gradients, which in turn affect kinetics, membrane hydration, and long-term degradation rates.</p>
+</section>
+<section id="gas-liquid-separators">
+<h3>Gas-liquid separators<a class="headerlink" href="#gas-liquid-separators" title="Permalink to this heading">#</a></h3>
+<p>At stack outlets, gas-liquid separators split produced hydrogen/oxygen from entrained liquid water. Their performance is essential for:</p>
+<ul class="simple">
+<li><p>Stable downstream gas purity</p></li>
+<li><p>Protection of dryers/compressors</p></li>
+<li><p>Water recovery back to the loop</p></li>
+</ul>
+<p>Separator sizing and residence time must account for transient operation, especially during rapid load changes.</p>
+</section>
+<section id="dryers-and-gas-conditioning">
+<h3>Dryers and gas conditioning<a class="headerlink" href="#dryers-and-gas-conditioning" title="Permalink to this heading">#</a></h3>
+<p>Downstream conditioning removes residual moisture and impurities to meet end-use or storage requirements. Depending on pressure and purity targets, systems may include:</p>
+<ul class="simple">
+<li><p>Mechanical knock-out and coalescing filters</p></li>
+<li><p>Desiccant or membrane dryers</p></li>
+<li><p>Final filtration and quality monitoring</p></li>
+</ul>
+<p>Conditioning strategy directly impacts hydrogen quality compliance and overall system efficiency.</p>
+</section>
+<section id="pressure-regulation-and-compression">
+<h3>Pressure regulation and compression<a class="headerlink" href="#pressure-regulation-and-compression" title="Permalink to this heading">#</a></h3>
+<p>Pressure-control hardware manages stack differential pressure and downstream delivery pressure. This subsystem can include:</p>
+<ul class="simple">
+<li><p>Back-pressure regulators</p></li>
+<li><p>Safety relief valves and burst devices</p></li>
+<li><p>Mechanical or electrochemical compression stages</p></li>
+</ul>
+<p>Higher delivery pressure can reduce external compression duty but may increase crossover risk and mechanical stress on the membrane.</p>
+</section>
+<section id="power-electronics-and-electrical-protection">
+<h3>Power electronics and electrical protection<a class="headerlink" href="#power-electronics-and-electrical-protection" title="Permalink to this heading">#</a></h3>
+<p>The stack is interfaced to the grid or DC source through power electronics that regulate current and voltage. Typical elements are:</p>
+<ul class="simple">
+<li><p>AC/DC or DC/DC conversion stage</p></li>
+<li><p>Current control loop with ramp-rate constraints</p></li>
+<li><p>Protection functions (overcurrent, overvoltage, insulation monitoring)</p></li>
+</ul>
+<p>Converter dynamics strongly influence how quickly the electrolyzer can follow renewable generation profiles.</p>
+</section>
+<section id="sensors-diagnostics-and-control-system">
+<h3>Sensors, diagnostics, and control system<a class="headerlink" href="#sensors-diagnostics-and-control-system" title="Permalink to this heading">#</a></h3>
+<p>Instrumentation provides the observability needed for safe and efficient operation. Common measurements include:</p>
+<ul class="simple">
+<li><p>Stack current, voltage, and cell-voltage spread</p></li>
+<li><p>Inlet/outlet pressure, temperature, and flow</p></li>
+<li><p>Gas purity and leak detection</p></li>
+</ul>
+<p>Supervisory control coordinates startup, nominal operation, standby, and shutdown sequences while enforcing safety interlocks and fault handling.</p>
+</section>
+<section id="safety-subsystem-and-shutdown-logic">
+<h3>Safety subsystem and shutdown logic<a class="headerlink" href="#safety-subsystem-and-shutdown-logic" title="Permalink to this heading">#</a></h3>
+<p>Safety functions are integrated across BoP hardware and software. Core protections include:</p>
+<ul class="simple">
+<li><p>Hydrogen leak detection and ventilation interlocks</p></li>
+<li><p>Overpressure protection and controlled venting</p></li>
+<li><p>Crossover risk management through pressure-differential limits</p></li>
+<li><p>Emergency stop and safe de-energization procedures</p></li>
+</ul>
+<p>Robust shutdown logic is especially important during abnormal events such as cooling failure, loss of feedwater, or rapid power interruption.</p>
+<p>Although stack performance receives primary attention, BoP parasitic power can substantially influence system-level efficiency. For dynamic operation (for example, coupling with renewables), control bandwidth of pumps, valves, and converter hardware becomes a limiting factor for ramp-rate capability.</p>
+<p>Safety functions are integral to BoP design and include hydrogen leak detection, oxygen-hydrogen crossover management, overpressure protection, purge logic, and safe shutdown sequences.</p>
+</section>
 </section>
 <section id="aging-and-degradation-mechanisms">
 <h2>Aging and Degradation Mechanisms<a class="headerlink" href="#aging-and-degradation-mechanisms" title="Permalink to this heading">#</a></h2>
-<p>Key failure modes include catalyst dissolution, membrane thinning, and contamination.</p>
+<p>Degradation in PEM electrolyzers is multi-physics and cumulative. Major mechanisms include:</p>
+<ul class="simple">
+<li><p>Catalyst degradation: dissolution, agglomeration, and support/interface evolution</p></li>
+<li><p>Membrane degradation: chemical attack, thinning, pinhole formation, and mechanical fatigue</p></li>
+<li><p>Interfacial/contact degradation: increased contact resistance, oxide growth, compression loss</p></li>
+<li><p>Transport-layer degradation: pore blockage, structural changes, or contamination</p></li>
+</ul>
+<p>Operational stressors that accelerate aging include high current density, frequent start-stop cycles, high differential pressure, dry operation, and temperature excursions.</p>
+<p>A practical durability framework separates reversible and irreversible effects:</p>
+<ul class="simple">
+<li><p>Reversible: temporary flooding/dry-out, transient thermal gradients, short-term contamination</p></li>
+<li><p>Irreversible: membrane damage, catalyst loss, persistent resistance increase</p></li>
+</ul>
+<p>Tracking degradation usually combines voltage-rise rate under defined load, impedance evolution, and post-mortem material analysis.</p>
 </section>
 <section id="characterization-methods">
 <h2>Characterization Methods<a class="headerlink" href="#characterization-methods" title="Permalink to this heading">#</a></h2>
 <section id="electrochemical-impedance-spectroscopy-eis">
 <h3>Electrochemical Impedance Spectroscopy (EIS)<a class="headerlink" href="#electrochemical-impedance-spectroscopy-eis" title="Permalink to this heading">#</a></h3>
-<p>Used to analyze charge transfer and diffusion processes in situ.</p>
+<p>EIS decomposes cell response over frequency to separate dominant processes:</p>
+<ul class="simple">
+<li><p>High-frequency intercept: mostly ohmic resistance</p></li>
+<li><p>Mid-frequency arcs: charge-transfer and interfacial effects</p></li>
+<li><p>Low-frequency features: mass transport and coupled fluid-thermal dynamics</p></li>
+</ul>
+<p>It is widely used in situ for condition monitoring and parameterization of reduced-order models.</p>
 </section>
 <section id="cyclic-voltammetry-cv">
 <h3>Cyclic Voltammetry (CV)<a class="headerlink" href="#cyclic-voltammetry-cv" title="Permalink to this heading">#</a></h3>
-<p>Useful for evaluating catalyst activity and electrochemical surface area.</p>
+<p>CV probes electrochemical surface processes and is commonly used to evaluate catalyst behavior and electrochemically active surface area trends. In durability studies, repeated CV can reveal activity loss, surface restructuring, and contamination effects.</p>
 </section>
 <section id="cross-sectional-sem-and-xps">
 <h3>Cross-sectional SEM and XPS<a class="headerlink" href="#cross-sectional-sem-and-xps" title="Permalink to this heading">#</a></h3>
-<p>Structural and chemical analysis of aged membranes and catalyst layers.</p>
+<p>Microscopy and spectroscopy complement electrochemical tests by linking performance drift to physical root causes:</p>
+<ul class="simple">
+<li><p>Cross-sectional SEM visualizes layer thickness, cracks, delamination, and PTL/CL morphology</p></li>
+<li><p>XPS provides surface chemical-state information (oxidation states, contaminants, elemental composition)</p></li>
+</ul>
+<p>Together, they support post-mortem diagnosis and validation of degradation hypotheses from in-operando data.</p>
 </section>
 <section id="polarization-curve-and-durability-testing">
 <h3>Polarization Curve and Durability Testing<a class="headerlink" href="#polarization-curve-and-durability-testing" title="Permalink to this heading">#</a></h3>
-<p>Standard metrics for assessing cell performance and lifespan.</p>
+<p>Polarization curves remain the baseline method for benchmarking performance over current density. They provide a compact view of reversible, kinetic, ohmic, and transport limitations.</p>
+<p>Durability protocols (constant-current, load-cycling, start-stop, and accelerated stress tests) quantify voltage drift and failure progression. For comparable reporting, tests should specify:</p>
+<ul class="simple">
+<li><p>Operating temperature and pressure</p></li>
+<li><p>Water quality and flow conditions</p></li>
+<li><p>Current-density profile and cycle definition</p></li>
+<li><p>Measurement intervals for EIS/CV/polarization diagnostics</p></li>
+</ul>
+<p>Combining electrochemical and material diagnostics yields the most reliable path from observed performance loss to actionable design improvements.</p>
 </section>
 </section>
 </section>
@@ -457,12 +657,31 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pem-cell-and-stack-design">PEM Cell and Stack Design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-components">Cell Components</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catalyst-layers-and-membranes">Catalyst Layers and Membranes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pem-cell-and-stack-design">PEM Cell and Stack Design</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-level-design">Cell level design</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-level-design">Stack level design</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#balance-of-plant-bop">Balance of Plant (BoP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-components">Cell Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#membranes">Membranes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catalysts">Catalysts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ptls">PTLs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bipolar-plates-and-end-plates">Bipolar plates and end plates</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#balance-of-plant-bop">Balance of Plant (BoP)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-treatment-and-make-up-unit">Water treatment and make-up unit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feed-tank-and-circulation-loop">Feed tank and circulation loop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pumps-and-flow-control-valves">Pumps and flow control valves</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-exchangers-and-thermal-loop">Heat exchangers and thermal loop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-liquid-separators">Gas-liquid separators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dryers-and-gas-conditioning">Dryers and gas conditioning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pressure-regulation-and-compression">Pressure regulation and compression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#power-electronics-and-electrical-protection">Power electronics and electrical protection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sensors-diagnostics-and-control-system">Sensors, diagnostics, and control system</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#safety-subsystem-and-shutdown-logic">Safety subsystem and shutdown logic</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aging-and-degradation-mechanisms">Aging and Degradation Mechanisms</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#characterization-methods">Characterization Methods</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-impedance-spectroscopy-eis">Electrochemical Impedance Spectroscopy (EIS)</a></li>
