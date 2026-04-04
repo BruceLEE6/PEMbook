@@ -30,13 +30,13 @@ jobs:
           pip install jupyter-book
 
       - name: Build the book
-        run: jupyter-book build jupyter-book
+        run: jupyter-book build jupyter-book --path-output site
 
       - name: Publish built HTML to gh-pages
         run: |
           set -euo pipefail
 
-          BUILD_DIR="jupyter-book/_build/html"
+          BUILD_DIR="site/_build/html"
           DEPLOY_DIR="$(mktemp -d)"
 
           test -d "$BUILD_DIR"
