@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Single Cell Modeling &#8212; PEM Electrolyzers: From Modeling to Control</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/04_single_cell_modeling';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="System-Level and Stack Modeling" href="05_stack_modeling.html" />
+    <link rel="prev" title="System Components and Architectures" href="03_components.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">PEM Electrolyzers: From Modeling to Control</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Preface
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_introduction.html">Introduction to PEM Electrolyzers and Hydrogen Energy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_principles.html">Electrochemical and Physical Principles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_components.html">System Components and Architectures</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Single Cell Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_stack_modeling.html">System-Level and Stack Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_numerical_methods.html">Numerical Methods and Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_control_requirements.html">Control Requirements and Architectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_model_based_control.html">Model-Based Control Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_learning_control.html">Learning-Based and Adaptive Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_future_trends.html">Emerging Research and Industrial Directions</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/04_single_cell_modeling.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Single Cell Modeling</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equations-mass-charge-energy">Governing Equations (Mass, Charge, Energy)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics">Electrochemical Kinetics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-reactions">Electrochemical Reactions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reversible-cell-potential-nernst">Reversible Cell Potential (Nernst)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-relation">Faradaic Relation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overpotentials">Overpotentials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#charge-transport-solid-and-membrane">Charge Transport (solid and membrane)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kinetics-butlervolmer">Kinetics (Butler–Volmer)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-notes">Modeling Notes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-effective-surface-area-a-mathrm-eff">Estimating the Effective Surface Area <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#figure-catalyst-layer-schematic">Figure: Catalyst Layer Schematic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-transport-gas-liquid">Species Transport (gas/liquid)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-balance">Energy Balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-transport-in-porous-layers">Gas Transport in Porous Layers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-management-in-membrane">Water Management in Membrane</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-and-1d-modeling-approaches">0D and 1D Modeling Approaches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-and-calibration">Parameter Estimation and Calibration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-fitting-a-polarization-curve">Case Study: Fitting a Polarization Curve</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="single-cell-modeling">
+<h1>Single Cell Modeling<a class="headerlink" href="#single-cell-modeling" title="Permalink to this heading">#</a></h1>
+<section id="governing-equations-mass-charge-energy">
+<h2>Governing Equations (Mass, Charge, Energy)<a class="headerlink" href="#governing-equations-mass-charge-energy" title="Permalink to this heading">#</a></h2>
+<p><em>Outline mass, charge, and energy balances for membrane, catalyst layers, and channels.</em></p>
+</section>
+<section id="electrochemical-kinetics">
+<h2>Electrochemical Kinetics<a class="headerlink" href="#electrochemical-kinetics" title="Permalink to this heading">#</a></h2>
+<section id="electrochemical-reactions">
+<h3>Electrochemical Reactions<a class="headerlink" href="#electrochemical-reactions" title="Permalink to this heading">#</a></h3>
+<p>The electrochemical reactions in an acid-electrolyte PEM electrolyzer are the oxygen evolution reaction (OER, at the anode) and the hydrogen evolution reaction (HER, at the cathode). Written in acidic form:</p>
+<p><strong>Anode (OER, oxidation)</strong>
+$<span class="math notranslate nohighlight">\(
+2\,\mathrm{H_{2}O(l)} \rightarrow \mathrm{O_{2}(g)} + 4\,\mathrm{H^{+}} + 4\,\mathrm{e^{-}}
+\)</span>$</p>
+<p><strong>Cathode (HER, reduction)</strong>
+$<span class="math notranslate nohighlight">\(
+4\,\mathrm{H^{+}} + 4\,\mathrm{e^{-}} \rightarrow 2\,\mathrm{H_{2}(g)}
+\)</span>$</p>
+<p>Here we should note that at both the anode and cathode sides, both reduction and oxidation reactions happen meanwhile. At the anode side, the dominant reaction is the oxidation one while at the cathode side the reduction reaction is dominant. In the above two chemical reaction formulas, the reactions along the arrows are dominant.</p>
+<p><strong>Overall reaction</strong>
+$<span class="math notranslate nohighlight">\(
+2\,\mathrm{H_{2}O(l)} \rightarrow \mathrm{O_{2}(g)} + 2\,\mathrm{H_{2}(g)}
+\)</span>$</p>
+</section>
+<section id="reversible-cell-potential-nernst">
+<h3>Reversible Cell Potential (Nernst)<a class="headerlink" href="#reversible-cell-potential-nernst" title="Permalink to this heading">#</a></h3>
+<p>Standard reversible potential <span class="math notranslate nohighlight">\(E^{\circ} \approx 1.229\,\mathrm{V}\)</span> at <span class="math notranslate nohighlight">\(298.15\,\mathrm{K}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+E_{\mathrm{rev}}(T,p) = E^{\circ}(T) + \frac{RT}{4F}\ln\!\left( \frac{p_{\mathrm{H_2}}^{2}\,p_{\mathrm{O_2}}}{p_{\mathrm{H_2O}}^{2}} \right)
+\]</div>
+<p>An often used temperature dependence (valid roughly for <span class="math notranslate nohighlight">\(273\)</span>–<span class="math notranslate nohighlight">\(353\,\mathrm{K}\)</span> at liquid water reference state) is</p>
+<div class="math notranslate nohighlight">
+\[
+E^{\circ}(T) \approx 1.229\,\text{V} - 8.5\times10^{-4}\,(T-298.15)\,\text{V},
+\]</div>
+<p>which yields <span class="math notranslate nohighlight">\(E^{\circ}\approx 1.185\,\text{V}\)</span> at <span class="math notranslate nohighlight">\(80\,^{\circ}\text{C}\)</span>. Insert this <span class="math notranslate nohighlight">\(E^{\circ}(T)\)</span> in the Nernst expression above when evaluating reversible voltage at temperature <span class="math notranslate nohighlight">\(T\)</span> and specified gas pressures.</p>
+</section>
+<section id="faradaic-relation">
+<h3>Faradaic Relation<a class="headerlink" href="#faradaic-relation" title="Permalink to this heading">#</a></h3>
+<p>Connect current density to production rate:</p>
+<div class="math notranslate nohighlight">
+\[
+ r_{\mathrm{H_{2}}}\,(\mathrm{mol\,m^{-2}s^{-1}}) = \frac{i}{2F}, \quad
+ r_{\mathrm{O_{2}}} = \frac{i}{4F}
+\]</div>
+<p>Use these as source terms in species mass balances (sign chosen by production/consumption).</p>
+</section>
+<section id="overpotentials">
+<h3>Overpotentials<a class="headerlink" href="#overpotentials" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="charge-transport-solid-and-membrane">
+<h3>Charge Transport (solid and membrane)<a class="headerlink" href="#charge-transport-solid-and-membrane" title="Permalink to this heading">#</a></h3>
+<p>Solid matrix (current collectors, PTLs, catalyst support):
+$<span class="math notranslate nohighlight">\(
+-\nabla \cdot (\sigma_{\text{sol}} \nabla \phi_{\text{sol}}) = 0 \quad \text{(outside CLs)},
+\)</span><span class="math notranslate nohighlight">\(
+and in CLs the source couples to Faradaic current: \)</span>-\nabla \cdot (\sigma_{\text{sol}} \nabla \phi_{\text{sol}}) = a_{\mathrm{eff}}, i_{\mathrm{BV}}<span class="math notranslate nohighlight">\(. Protonic path (membrane/ionomer):
+\)</span><span class="math notranslate nohighlight">\(
+-\nabla \cdot (\kappa_{\text{mem}} \nabla \phi_{\text{mem}}) = a_{\mathrm{eff}}\, i_{\mathrm{BV}}.
+\)</span>$</p>
+<p>In all solid layers, including current collector and PTLs, the solid potential respects:
+$<span class="math notranslate nohighlight">\(
+ -\bm{n}\sigma_{ef}\nabla \phi_{\mathrm{sol}} =I_{ap} 
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\bm{n}$ is the unit vector in the current direction (from left to right in the following figure).</p>
+<p><img alt="alt text" src="../_images/image.png" />
+$<span class="math notranslate nohighlight">\(
+\eta_{\mathrm{an}}^{\mathrm{o}} = \phi_{\mathrm{sol}} - \phi_{\mathrm{mem}} - U_{\mathrm{an}}^{0}
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+\eta_{\mathrm{cn}}^{\mathrm{o}} = \phi_{\mathrm{sol}} - \phi_{\mathrm{mem}} - U_{\mathrm{cn}}^{0}
+\)</span>$</p>
+</section>
+<section id="kinetics-butlervolmer">
+<h3>Kinetics (Butler–Volmer)<a class="headerlink" href="#kinetics-butlervolmer" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+ i = i_{0} \left[\exp\!\left(\frac{\alpha_{a} F \eta}{RT}\right) - \exp\!\left(-\frac{\alpha_{c} F \eta}{RT}\right)\right]
+\]</div>
+<p>On the anode side,</p>
+<div class="math notranslate nohighlight">
+\[
+ i = i_{0} \left[\exp\!\left(\frac{\alpha_{a} F \eta_{an}}{RT}\right) - \exp\!\left(-\frac{(1-\alpha_{a}) F \eta_{an}}{RT}\right)\right]
+\]</div>
+<p>On the cathode side,</p>
+<div class="math notranslate nohighlight">
+\[
+ i = i_{0} \left[\exp\!\left(\frac{(1-\alpha_{c}) F \eta_{cn}}{RT}\right) - \exp\!\left(-\frac{\alpha_{c} F \eta_{cn}}{RT}\right)\right]
+\]</div>
+<p>For large overpotentials the Tafel approximation is convenient:</p>
+<div class="math notranslate nohighlight">
+\[
+ \eta \approx \frac{RT}{\alpha F}\ln\!\left(\frac{i}{i_{0}}\right).
+\]</div>
+<p>The current direction in the above two equations is from the external circuit to the solid part and from the interface to the bulk membrane part. So normally, the current sign at the anode side should be positive while it is negative at the cathode side.</p>
+</section>
+<section id="modeling-notes">
+<h3>Modeling Notes<a class="headerlink" href="#modeling-notes" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Include electrode-specific <span class="math notranslate nohighlight">\(i_{0}(T)\)</span> (Arrhenius) and effective surface area <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}\)</span> so <span class="math notranslate nohighlight">\(i_{\mathrm{loc}} = a_{\mathrm{eff}}\, i_{\mathrm{BV}}\)</span>. The current measured at the current collector is the area integral of this local current: <span class="math notranslate nohighlight">\(I = \int_{A_{\text{geom}}} i_{\mathrm{loc}}\,\mathrm{d}A\)</span>. If <span class="math notranslate nohighlight">\(i_{\mathrm{BV}}\)</span> and <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}\)</span> are uniform, the geometric current density is <span class="math notranslate nohighlight">\(i_{\text{geom}} = I/A_{\text{geom}} = a_{\mathrm{eff}}\, i_{\mathrm{BV}}\)</span>.</p></li>
+<li><p>Mass-transport limitations modify surface activities (concentration overpotential). Use local <span class="math notranslate nohighlight">\(a_{\mathrm{H^{+}}}\)</span>, <span class="math notranslate nohighlight">\(p_{\mathrm{H_{2}}}\)</span>, and <span class="math notranslate nohighlight">\(p_{\mathrm{O_{2}}}\)</span> in Nernst and <span class="math notranslate nohighlight">\(i_{0}\)</span> expressions.</p></li>
+<li><p>In porous catalyst layers, the reaction source for species conservation is <span class="math notranslate nohighlight">\(
+\nabla\cdot\!(\mathbf{N}_{k}) = S_{k} = \nu_{k}\, r_{\mathrm{rxn}}\)</span> with <span class="math notranslate nohighlight">\(r_{\mathrm{rxn}} = i/(nF)\)</span>, where <span class="math notranslate nohighlight">\(\nu_{k}\)</span> is stoichiometry value for species <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+<li><p>For control design, linearize kinetics about an operating point <span class="math notranslate nohighlight">\(i^{\star}\)</span> to obtain the small-signal gain <span class="math notranslate nohighlight">\(\partial \eta / \partial i\)</span>.</p></li>
+</ul>
+</section>
+<section id="estimating-the-effective-surface-area-a-mathrm-eff">
+<h3>Estimating the Effective Surface Area <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}\)</span><a class="headerlink" href="#estimating-the-effective-surface-area-a-mathrm-eff" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>CV (Pt cathode, HUPD/CO-stripping): integrate the H adsorption charge <span class="math notranslate nohighlight">\(Q_H\)</span>; (\text{ECSA} = Q_H / (0.21,\text{mC,cm}^{-2}<em>{\text{Pt}})); then (a</em>{\mathrm{eff}} = \text{ECSA}/A_{\text{geom}}) (roughness factor).</p></li>
+<li><p>Double-layer capacitance: measure <span class="math notranslate nohighlight">\(C_{\text{dl}}\)</span> (EIS or non-faradaic CV); assume specific capacitance <span class="math notranslate nohighlight">\(C_{\text{sp}}\)</span> (e.g., 20–60 <span class="math notranslate nohighlight">\(\mu\)</span>F,cm<span class="math notranslate nohighlight">\(^{-2}\)</span>); (\text{ECSA} = C_{\text{dl}}/C_{\text{sp}}); (a_{\mathrm{eff}} = \text{ECSA}/A_{\text{geom}}).</p></li>
+<li><p>Loading and particle size back-of-envelope: for spherical particles, (a_{\mathrm{eff}} \approx 6, (\text{loading}\times f_{\text{util}})/(\rho_{\text{cat}}, d_p)); divide by electrode geometric area to get per-area roughness; <span class="math notranslate nohighlight">\(f_{\text{util}}\)</span> accounts for ionomer coverage/agglomeration.</p></li>
+<li><p>OER (Ir/Ru oxide) anode: often use capacitance-based ECSA or kinetic fits; report roughness factor (a_{\mathrm{eff}}) relative to geometric area.</p></li>
+<li><p>Degradation: model loss of ECSA via a decaying <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}(t)\)</span> to capture aging in long-term simulations.</p></li>
+</ul>
+</section>
+<section id="figure-catalyst-layer-schematic">
+<h3>Figure: Catalyst Layer Schematic<a class="headerlink" href="#figure-catalyst-layer-schematic" title="Permalink to this heading">#</a></h3>
+<p>The LaTeX version included a TikZ schematic of the catalyst layer highlighting triple-phase boundaries. Convert that diagram to an SVG/PNG and reference it here when available.</p>
+<figure class="align-default" id="fig-a-eff">
+<a class="reference internal image-reference" href="../_images/a_eff_schematic.svg"><img alt="../_images/a_eff_schematic.svg" src="../_images/a_eff_schematic.svg" width="80%" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Effective catalytic surface area relative to geometric area (roughness factor (a_{\mathrm{eff}})). The wavy green surface and active sites illustrate how true area exceeds the projected geometric area.</span><a class="headerlink" href="#fig-a-eff" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="species-transport-gas-liquid">
+<h3>Species Transport (gas/liquid)<a class="headerlink" href="#species-transport-gas-liquid" title="Permalink to this heading">#</a></h3>
+<p>Fickian form in channels:
+$<span class="math notranslate nohighlight">\(
+\frac{\partial c_k}{\partial t} + \nabla \cdot(-D_k\nabla c_k + c_k \mathbf{u}) = S_k,
+\)</span>$
+where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\partial c_k/\partial t\)</span>: transient accumulation of species <span class="math notranslate nohighlight">\(k\)</span> (<span class="math notranslate nohighlight">\( mol\cdot m^{-3} s^{-1}\)</span>).</p></li>
+<li><p><span class="math notranslate nohighlight">\(-D_k \nabla c_k\)</span>: diffusive flux driven by concentration gradients; <span class="math notranslate nohighlight">\(D_k\)</span> is the (effective) diffusion coefficient (<span class="math notranslate nohighlight">\(m^{2} s^{-1}\)</span>).</p></li>
+<li><p><span class="math notranslate nohighlight">\(c_k \mathbf{u}\)</span>: convective flux carried by the bulk velocity <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> (<span class="math notranslate nohighlight">\(m s^{-1}\)</span>); together with diffusion it forms the total flux inside the divergence.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\nabla\cdot(\cdot)\)</span>: divergence gives the net outflow of the total flux per unit volume.</p></li>
+<li><p><span class="math notranslate nohighlight">\(S_k\)</span>: source/sink term (<span class="math notranslate nohighlight">\( mol\cdot m^{-3} s^{-1}\)</span>); here it includes electrochemical production/consumption in the catalyst layer via <span class="math notranslate nohighlight">\(S_k = \nu_k\, i/(nF)\)</span> (positive for production).</p></li>
+</ul>
+<p>where <span class="math notranslate nohighlight">\(S_k\)</span> includes electrochemical source terms <span class="math notranslate nohighlight">\(S_k = \nu_k\, i/(nF)\)</span> in CLs. In membrane, water content <span class="math notranslate nohighlight">\(\lambda\)</span> often uses a diffusive plus electro-osmotic drag form: <span class="math notranslate nohighlight">\(N_{\mathrm{H_2O}} = -D_{\lambda}\nabla \lambda + n_{\text{drag}} (i/F)\)</span>.</p>
+<p><strong>Porous media (CL/PTL)</strong></p>
+<ul class="simple">
+<li><p>Effective diffusivity: <span class="math notranslate nohighlight">\(D_{k,\text{eff}} = D_{k,\text{bulk}}\, \varepsilon^{1.5}/\tau\)</span> (Bruggeman) to account for porosity <span class="math notranslate nohighlight">\(\varepsilon\)</span> and tortuosity <span class="math notranslate nohighlight">\(\tau\)</span>.</p></li>
+<li><p>Flux form (dilute Fick): <span class="math notranslate nohighlight">\(N_k = -D_{k,\text{eff}}\nabla c_k\)</span>; in binary gas, a Stefan–Maxwell form captures multicomponent effects: <span class="math notranslate nohighlight">\(\nabla p_k = \sum_j (x_k x_j/\mathcal{D}_{kj}) (\mathbf{N}_k - \mathbf{N}_j)\)</span>.</p></li>
+<li><p>Knudsen correction in small pores: <span class="math notranslate nohighlight">\(1/D_{k,\text{eff}} = 1/(D_{k,\text{mol}}\,\varepsilon^{1.5}/\tau) + 1/D_{k,\text{Kn}}\)</span>, <span class="math notranslate nohighlight">\(D_{k,\text{Kn}} \propto r_p\sqrt{T/M_k}\)</span>.</p></li>
+<li><p>Flux form (dilute Fick): <span class="math notranslate nohighlight">\(N_k = -D_{k,\text{eff}}\nabla c_k\)</span>; in binary gas, a Stefan–Maxwell form captures multicomponent effects: <span class="math notranslate nohighlight">\(\nabla p_k = \sum_j (x_k x_j/\mathcal{D}_{kj}) (\mathbf{N}_k - \mathbf{N}_j)\)</span>.</p></li>
+<li><p>Stefan–Maxwell detail (multicomponent):
+$<span class="math notranslate nohighlight">\(
+  -\nabla x_k = \sum_{j\neq k} \frac{x_j\mathbf{N}_k - x_k\mathbf{N}_j}{c_T\,\mathcal{D}_{kj}},
+  \)</span><span class="math notranslate nohighlight">\(
+  where \)</span>x_k<span class="math notranslate nohighlight">\( are mole fractions, \)</span>c_T<span class="math notranslate nohighlight">\( total concentration, and \)</span>\mathcal{D}_{kj}$ binary diffusivities. It naturally enforces that fluxes of one species depend on gradients and counter-fluxes of the others; reduce to Fick’s law in binary limit.</p></li>
+<li><p>Knudsen correction in small pores: <span class="math notranslate nohighlight">\(1/D_{k,\text{eff}} = 1/(D_{k,\text{mol}}\,\varepsilon^{1.5}/\tau) + 1/D_{k,\text{Kn}}\)</span>, <span class="math notranslate nohighlight">\(D_{k,\text{Kn}} \propto r_p\sqrt{T/M_k}\)</span>.</p></li>
+</ul>
+<p><strong>Stefan–Maxwell: derivation sketch</strong></p>
+<ul class="simple">
+<li><p>Species momentum balance (low Mach, ideal gas, no body force): <span class="math notranslate nohighlight">\(0 = -\nabla p_k + \sum_{j\neq k} \mathbf{f}_{kj}\)</span>.</p></li>
+<li><p>Friction closure: <span class="math notranslate nohighlight">\(\mathbf{f}_{kj} = (c_k c_j RT/\mathcal{D}_{kj})(\mathbf{v}_j-\mathbf{v}_k)\)</span> with binary diffusivity <span class="math notranslate nohighlight">\(\mathcal{D}_{kj}\)</span>.</p></li>
+<li><p>Flux–velocity link and barycentric frame: <span class="math notranslate nohighlight">\(\mathbf{N}_k = c_k \mathbf{v}_k\)</span>, with <span class="math notranslate nohighlight">\(\sum_k \mathbf{N}_k = 0\)</span> for zero bulk flow (or use <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> if nonzero).</p></li>
+<li><p>Substitute <span class="math notranslate nohighlight">\(\mathbf{v}_k = \mathbf{N}_k/c_k\)</span>, divide by <span class="math notranslate nohighlight">\(c_T RT\)</span>, and write <span class="math notranslate nohighlight">\(x_k=c_k/c_T\)</span> to obtain
+$<span class="math notranslate nohighlight">\(
+  -\nabla x_k = \sum_{j\neq k} \frac{x_j\mathbf{N}_k - x_k\mathbf{N}_j}{c_T\,\mathcal{D}_{kj}},
+  \)</span><span class="math notranslate nohighlight">\(
+  which reduces to Fick in the binary limit. With pressure gradients, use \)</span>\nabla p_k = \sum_{j\neq k} (x_k x_j/\mathcal{D}_{kj})(\mathbf{N}_k-\mathbf{N}_j)<span class="math notranslate nohighlight">\( and \)</span>p_k=x_k p$ for ideal gases.</p></li>
+</ul>
+<p><strong>Friction closure from basic principles</strong></p>
+<ol class="arabic simple">
+<li><p>Start with species momentum balance (no inertia, no body forces): <span class="math notranslate nohighlight">\(0 = -\nabla p_k + \sum_{j\neq k} \mathbf{f}_{kj}\)</span>. This states pressure-gradient force on <span class="math notranslate nohighlight">\(k\)</span> is balanced by interspecies friction.</p></li>
+<li><p>Model collision drag: collisions between <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(j\)</span> transfer momentum at a rate proportional to their relative velocity. Let <span class="math notranslate nohighlight">\(\mathbf{f}_{kj} \propto (\mathbf{v}_j-\mathbf{v}_k)\)</span> and scale with collision frequency <span class="math notranslate nohighlight">\(\propto c_k c_j\)</span> and thermal energy <span class="math notranslate nohighlight">\(RT\)</span>; introduce binary diffusivity <span class="math notranslate nohighlight">\(\mathcal{D}_{kj}\)</span> as the proportionality: <span class="math notranslate nohighlight">\(\mathbf{f}_{kj} = (c_k c_j RT/\mathcal{D}_{kj})(\mathbf{v}_j-\mathbf{v}_k)\)</span>.</p></li>
+<li><p>Enforce Newton’s third law: <span class="math notranslate nohighlight">\(\mathbf{f}_{kj} = -\mathbf{f}_{jk}\)</span> so momentum exchange is pairwise conservative.</p></li>
+<li><p>Link velocities to fluxes: <span class="math notranslate nohighlight">\(\mathbf{N}_k = c_k \mathbf{v}_k\)</span>; choose barycentric frame so <span class="math notranslate nohighlight">\(\sum_k \mathbf{N}_k = 0\)</span> (or keep a bulk velocity term otherwise).</p></li>
+<li><p>Substitute the friction closure and flux–velocity relation into the momentum balance, divide by <span class="math notranslate nohighlight">\(c_T RT\)</span>, and express concentrations as mole fractions <span class="math notranslate nohighlight">\(x_k=c_k/c_T\)</span> to obtain the Stefan–Maxwell form above.</p></li>
+</ol>
+<p><strong>Two-phase note (gas + liquid)</strong></p>
+<ul class="simple">
+<li><p>Use saturation <span class="math notranslate nohighlight">\(s_l\)</span>; gas-phase transport scales with <span class="math notranslate nohighlight">\((1-s_l)^{n_g}\)</span>, liquid with <span class="math notranslate nohighlight">\(s_l^{n_l}\)</span>; capillary diffusion may be added via Leverett <span class="math notranslate nohighlight">\(J(s_l)\)</span> if needed.</p></li>
+<li><p>Source coupling: oxygen generated in anode CL, hydrogen in cathode CL; water consumed/produced depending on side and modeled phase.</p></li>
+</ul>
+<p><strong>Boundary conditions</strong></p>
+<ul class="simple">
+<li><p>Inlet channels: specified <span class="math notranslate nohighlight">\(c_k\)</span> or <span class="math notranslate nohighlight">\(y_k\)</span>, temperature, and flow rate (Dirichlet or Robin). Outlet: convective (zero diffusive flux) or fixed pressure.</p></li>
+<li><p>Interface channel \leftrightarrow PTL: continuity of flux and concentration; sometimes a mass-transfer coefficient <span class="math notranslate nohighlight">\(k_m\)</span> with <span class="math notranslate nohighlight">\(N_k = k_m (c_{k,\text{chan}} - c_{k,\text{PTL}})\)</span>.</p></li>
+<li><p>CL \leftrightarrow membrane: proton/water flux continuity; set water activity-dependent <span class="math notranslate nohighlight">\(\lambda(a_w)\)</span> at interfaces.</p></li>
+</ul>
+<p><strong>Coupling to reaction</strong>
+Species source <span class="math notranslate nohighlight">\(S_k = \nu_k\, i/(nF)\)</span> enters the conservation equation inside the CL. Mass-transport limitations feed back into kinetics via surface concentrations/activities used in Nernst and exchange current density <span class="math notranslate nohighlight">\(i_0\)</span>.</p>
+</section>
+<section id="energy-balance">
+<h3>Energy Balance<a class="headerlink" href="#energy-balance" title="Permalink to this heading">#</a></h3>
+<p>Lumped solid/fluid energy balance (example for a 0D cell control volume):
+$<span class="math notranslate nohighlight">\(
+\rho c_p \frac{dT}{dt} = \nabla \cdot (k \nabla T) + i\,\eta_{\text{act}} + i\,\eta_{\text{ohm}} - hA(T-T_{\infty}) + q_{\text{phase}},
+\)</span><span class="math notranslate nohighlight">\(
+where the source terms gather irreversible heating (activation + ohmic) and phase-change enthalpy if present. In 1D through-plane models, use layer-specific \)</span>k$ and include anisotropy in GDL/CL.</p>
+</section>
+<section id="gas-transport-in-porous-layers">
+<h3>Gas Transport in Porous Layers<a class="headerlink" href="#gas-transport-in-porous-layers" title="Permalink to this heading">#</a></h3>
+<p>Often represented with Darcy or Darcy–Forchheimer plus species convection-diffusion; a simple effective-diffusion model in CL/PTL is
+$<span class="math notranslate nohighlight">\(
+N_k = -\frac{\varepsilon^{1.5} D_{k,\text{bulk}}}{\tau}\,\nabla c_k,
+\)</span><span class="math notranslate nohighlight">\(
+with porosity \)</span>\varepsilon<span class="math notranslate nohighlight">\( and tortuosity \)</span>\tau$; for two-phase, add saturation-dependent corrections.</p>
+</section>
+<section id="water-management-in-membrane">
+<h3>Water Management in Membrane<a class="headerlink" href="#water-management-in-membrane" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Electro-osmotic drag: <span class="math notranslate nohighlight">\(n_{\text{drag}}\,(i/F)\)</span> from anode to cathode.</p></li>
+<li><p>Back-diffusion: driven by <span class="math notranslate nohighlight">\(\nabla \lambda\)</span> with <span class="math notranslate nohighlight">\(D_{\lambda}(T,\lambda)\)</span>.</p></li>
+<li><p>Water uptake isothermal isotherm links <span class="math notranslate nohighlight">\(\lambda\)</span> and water activity <span class="math notranslate nohighlight">\(a_w\)</span> at interfaces.</p></li>
+</ul>
+</section>
+</section>
+<section id="d-and-1d-modeling-approaches">
+<h2>0D and 1D Modeling Approaches<a class="headerlink" href="#d-and-1d-modeling-approaches" title="Permalink to this heading">#</a></h2>
+<p><em>Compare lumped (0D) and through-plane (1D) models, highlighting assumptions and typical boundary conditions.</em></p>
+</section>
+<section id="parameter-estimation-and-calibration">
+<h2>Parameter Estimation and Calibration<a class="headerlink" href="#parameter-estimation-and-calibration" title="Permalink to this heading">#</a></h2>
+<p><em>Discuss fitting kinetics and transport parameters to polarization curves or EIS data.</em></p>
+</section>
+<section id="case-study-fitting-a-polarization-curve">
+<h2>Case Study: Fitting a Polarization Curve<a class="headerlink" href="#case-study-fitting-a-polarization-curve" title="Permalink to this heading">#</a></h2>
+<p><em>Outline a simple workflow for calibrating model parameters against experimental polarization data.</em></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_components.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">System Components and Architectures</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05_stack_modeling.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">System-Level and Stack Modeling</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equations-mass-charge-energy">Governing Equations (Mass, Charge, Energy)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-kinetics">Electrochemical Kinetics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electrochemical-reactions">Electrochemical Reactions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reversible-cell-potential-nernst">Reversible Cell Potential (Nernst)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#faradaic-relation">Faradaic Relation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overpotentials">Overpotentials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#charge-transport-solid-and-membrane">Charge Transport (solid and membrane)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kinetics-butlervolmer">Kinetics (Butler–Volmer)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-notes">Modeling Notes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-effective-surface-area-a-mathrm-eff">Estimating the Effective Surface Area <span class="math notranslate nohighlight">\(a_{\mathrm{eff}}\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#figure-catalyst-layer-schematic">Figure: Catalyst Layer Schematic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#species-transport-gas-liquid">Species Transport (gas/liquid)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-balance">Energy Balance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-transport-in-porous-layers">Gas Transport in Porous Layers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#water-management-in-membrane">Water Management in Membrane</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-and-1d-modeling-approaches">0D and 1D Modeling Approaches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-and-calibration">Parameter Estimation and Calibration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-fitting-a-polarization-curve">Case Study: Fitting a Polarization Curve</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Zhongliang Li
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
