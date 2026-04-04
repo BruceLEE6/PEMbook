@@ -32,11 +32,26 @@ jobs:
       - name: Build the book
         run: jupyter-book build jupyter-book
 
+      - name: Debug build output paths
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 5 -type f -name index.html | sort
+
       - name: Publish built HTML to gh-pages
         run: |
           set -euo pipefail
 
-          BUILD_DIR="jupyter-book/_build/html"
+          CANDIDATE_INDEX="$(find . -type f -path '*/_build/html/index.html' | head -n 1 || true)"
+          if [[ -z "$CANDIDATE_INDEX" ]]; then
+            echo "Could not locate generated index.html under any */_build/html path"
+            find . -maxdepth 6 -type d -name html | sort
+            exit 1
+          fi
+
+          BUILD_DIR="$(dirname "$CANDIDATE_INDEX")"
+          echo "Using build directory: $BUILD_DIR"
+
           DEPLOY_DIR="$(mktemp -d)"
 
           test -d "$BUILD_DIR"
@@ -60,5 +75,8 @@ jobs:
 
           cd "$DEPLOY_DIR"
           git add --all
-          git commit -m "deploy: ${GITHUB_SHA}" || exit 0
+          git commit -m "deploy: ${GITHUB_SHA}" || {
+            echo "No changes to publish"
+            exit 0
+          }
           git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
