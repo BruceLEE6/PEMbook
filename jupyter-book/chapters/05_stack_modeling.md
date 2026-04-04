@@ -246,7 +246,7 @@ These metrics help define safe and efficient operating envelopes for renewable-c
 Balance-of-plant (BoP) models extend stack equations with auxiliary subsystems that dominate transient constraints and parasitic power. A control-oriented BoP model usually includes pumps, valves, pressure regulation, thermal loop dynamics, and gas-liquid separation.
 
 ### Water pump model
-Water-feed and recirculation pumps are commonly represented by a first-order actuator plus a pump head-flow relation.
+Water-feed and recirculation pumps are commonly represented by a first-order actuator plus a pump head-flow relation (Gulich, 2019; Karassik et al., 2008).
 
 Actuator dynamics:
 
@@ -260,6 +260,8 @@ $$
 \dot m_w \approx k_{p1}\,\omega_p - k_{p2}\,\Delta p
 $$
 
+This linearized form is typically obtained from manufacturer pump curves around a nominal operating point and is well suited for control-oriented electrolyzer models (Gulich, 2019; ISO 9906:2012).
+
 Hydraulic power and electrical consumption:
 
 $$
@@ -267,6 +269,7 @@ P_{\text{pump}} = \frac{\Delta p\,\dot V}{\eta_p}
 $$
 
 where $\dot V$ is volumetric flow and $\eta_p$ is pump efficiency. This term is needed to compute system efficiency, not only stack efficiency.
+BoP-oriented dynamic and efficiency analyses for water electrolysis systems also emphasize this auxiliary consumption term (Ursua et al., 2012).
 
 ### Pressure regulation model
 Pressure is controlled using back-pressure valves, regulator valves, and optional compressor coordination. A simple manifold pressure state is:

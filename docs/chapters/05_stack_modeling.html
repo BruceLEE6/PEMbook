@@ -623,7 +623,7 @@ P_{\text{el}}(t) = U_{\text{stack}}(t)\,I(t),
 <p>Balance-of-plant (BoP) models extend stack equations with auxiliary subsystems that dominate transient constraints and parasitic power. A control-oriented BoP model usually includes pumps, valves, pressure regulation, thermal loop dynamics, and gas-liquid separation.</p>
 <section id="water-pump-model">
 <h3>Water pump model<a class="headerlink" href="#water-pump-model" title="Permalink to this heading">#</a></h3>
-<p>Water-feed and recirculation pumps are commonly represented by a first-order actuator plus a pump head-flow relation.</p>
+<p>Water-feed and recirculation pumps are commonly represented by a first-order actuator plus a pump head-flow relation (Gulich, 2019; Karassik et al., 2008).</p>
 <p>Actuator dynamics:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -634,12 +634,14 @@ P_{\text{el}}(t) = U_{\text{stack}}(t)\,I(t),
 \[
 \dot m_w \approx k_{p1}\,\omega_p - k_{p2}\,\Delta p
 \]</div>
+<p>This linearized form is typically obtained from manufacturer pump curves around a nominal operating point and is well suited for control-oriented electrolyzer models (Gulich, 2019; ISO 9906:2012).</p>
 <p>Hydraulic power and electrical consumption:</p>
 <div class="math notranslate nohighlight">
 \[
 P_{\text{pump}} = \frac{\Delta p\,\dot V}{\eta_p}
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(\dot V\)</span> is volumetric flow and <span class="math notranslate nohighlight">\(\eta_p\)</span> is pump efficiency. This term is needed to compute system efficiency, not only stack efficiency.</p>
+<p>where <span class="math notranslate nohighlight">\(\dot V\)</span> is volumetric flow and <span class="math notranslate nohighlight">\(\eta_p\)</span> is pump efficiency. This term is needed to compute system efficiency, not only stack efficiency.
+BoP-oriented dynamic and efficiency analyses for water electrolysis systems also emphasize this auxiliary consumption term (Ursua et al., 2012).</p>
 </section>
 <section id="pressure-regulation-model">
 <h3>Pressure regulation model<a class="headerlink" href="#pressure-regulation-model" title="Permalink to this heading">#</a></h3>
